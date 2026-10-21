@@ -7524,25 +7524,29 @@ function getAsinListing(a) {
 }
 
 // 生成 SKU 单元格 HTML（本品牌显示，竞品显示 -）
-function skuCell(a) {
+function skuCell(a, extraStyle, extraClass) {
   var asinStr = '';
   var asinObj = null;
+  var clsAttr = extraClass ? ' class="' + extraClass + '"' : '';
+  var extra = extraStyle || '';
   if (a && typeof a === 'object') { asinStr = a.ASIN || ''; asinObj = a; }
   else if (a && typeof a === 'string') { asinStr = a; asinObj = (DATA.asins || []).find(function(x){return x.ASIN === asinStr;}); }
-  if (!asinObj || !isOwnBrandAsin(asinObj)) return '<td style="color:#cbd5e1;">-</td>';
+  if (!asinObj || !isOwnBrandAsin(asinObj)) return '<td' + clsAttr + ' style="color:#cbd5e1;' + extra + '">-</td>';
   var sku = MX_ASIN_SKU[asinStr] || '';
-  return '<td style="font-weight:600;color:#475569;">' + safeText(sku || '-') + '</td>';
+  return '<td' + clsAttr + ' style="font-weight:600;color:#475569;' + extra + '">' + safeText(sku || '-') + '</td>';
 }
 
 // 生成国家Listing 单元格 HTML（本品牌显示，竞品显示 -）
-function listingCell(a) {
+function listingCell(a, extraStyle, extraClass) {
   var asinStr = '';
   var asinObj = null;
+  var clsAttr = extraClass ? ' class="' + extraClass + '"' : '';
+  var extra = extraStyle || '';
   if (a && typeof a === 'object') { asinStr = a.ASIN || ''; asinObj = a; }
   else if (a && typeof a === 'string') { asinStr = a; asinObj = (DATA.asins || []).find(function(x){return x.ASIN === asinStr;}); }
-  if (!asinObj || !isOwnBrandAsin(asinObj)) return '<td style="color:#cbd5e1;">-</td>';
+  if (!asinObj || !isOwnBrandAsin(asinObj)) return '<td' + clsAttr + ' style="color:#cbd5e1;' + extra + '">-</td>';
   var listing = MX_ASIN_LISTING[asinStr] || '';
-  return '<td style="font-weight:600;color:#7c3aed;">' + safeText(listing || '-') + '</td>';
+  return '<td' + clsAttr + ' style="font-weight:600;color:#7c3aed;' + extra + '">' + safeText(listing || '-') + '</td>';
 }
 
 // ========== MODULE 1: 坑位总览 ==========
@@ -9715,8 +9719,8 @@ function renderPriceAlertFullListTable() {
       <td style="padding:6px 10px;border:1px solid #e2e8f0;">${safeText(a.pairLabel || '-')}</td>
       <td style="padding:6px 10px;border:1px solid #e2e8f0;">${asinImageThumb(a.ourASIN)}</td>
       <td style="padding:6px 10px;border:1px solid #e2e8f0;font-weight:600;">${asinJumpLink(a.ourASIN)}</td>
-      <td style="padding:6px 10px;border:1px solid #e2e8f0;">${skuCell(a.ourASIN)}</td>
-      <td style="padding:6px 10px;border:1px solid #e2e8f0;">${listingCell(a.ourASIN)}</td>
+      ${skuCell(a.ourASIN, 'padding:6px 10px;border:1px solid #e2e8f0;')}
+      ${listingCell(a.ourASIN, 'padding:6px 10px;border:1px solid #e2e8f0;')}
       <td style="padding:6px 10px;border:1px solid #e2e8f0;">${safeText(a.ourObj.BU || '-')}</td>
       <td style="padding:6px 10px;border:1px solid #e2e8f0;">${safeText(a.ourObj.category || '-')}</td>
       <td style="padding:6px 10px;border:1px solid #e2e8f0;">${safeText(a.ourObj.manager || '-')}</td>
@@ -11761,8 +11765,8 @@ function filterModalData() {
             '<td class="col-label">' + pairDiffLabelText(x.label) + '</td>' +
             '<td class="col-img">' + asinImageThumb(p.our) + '</td>' +
             '<td class="col-asin">' + asinJumpLink(p.our) + '</td>' +
-            '<td class="col-sku">' + skuCell(p.our) + '</td>' +
-            '<td class="col-listing">' + listingCell(p.our) + '</td>' +
+skuCell(p.our, null, 'col-sku') +
+listingCell(p.our, null, 'col-listing') +
             '<td class="col-price">' + pairDiffText(p.ourPrice) + '</td>' +
             '<td class="col-bsr">' + pairDiffText(p.ourSubBsr, 0) + '</td>' +
             '<td class="col-img">' + asinImageThumb(p.comp) + '</td>' +

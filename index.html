@@ -9600,8 +9600,18 @@ function openPriceAlertListModal(title, alerts) {
   renderPriceAlertFullListTable();
 }
 
-function openPriceAlertDetail(idx) {
-  const a = window._priceAlertData[idx];
+// 明细列表点行 → 直接按对象引用打开详情，避免「子集下标」错配到全量数组
+function __openPriceAlertRow(i) {
+  const arr = window._priceAlertListRows || [];
+  const a = arr[i];
+  if (!a) return;
+  closeModal();
+  setTimeout(() => openPriceAlertDetail(null, a), 200);
+}
+
+function openPriceAlertDetail(idx, obj) {
+  // obj 优先：明细列表里的行可能来自子集（活动/降价等），其下标不能用于 _priceAlertData
+  const a = (obj && typeof obj === 'object') ? obj : window._priceAlertData[idx];
   if (!a) return;
   const tagColor = a.alertType === '活动' ? '#f59e0b' : a.alertType === '降价' ? '#ef4444' : '#7c3aed';
   showPriceAlertModal('价格预警详情', `
@@ -9697,10 +9707,10 @@ function renderPriceAlertFullListTable() {
   updatePriceAlertFullFilterOptions(baseAlerts, f);
   const body = document.getElementById('priceAlertFullRows');
   if (!body) return;
-  let rows = alerts.map(a => {
+  window._priceAlertListRows = alerts;
+  let rows = alerts.map((a, i) => {
     const tagColor = a.alertType === '活动' ? '#f59e0b' : a.alertType === '降价' ? '#ef4444' : '#7c3aed';
-    const baseIdx = baseAlerts.indexOf(a);
-    return `<tr style="cursor:pointer;" onclick="closeModal();setTimeout(()=>openPriceAlertDetail(${baseIdx}),200);">
+    return `<tr style="cursor:pointer;" onclick="__openPriceAlertRow(${i})">
       <td style="padding:6px 10px;border:1px solid #e2e8f0;"><span style="background:${tagColor};color:#fff;padding:2px 8px;border-radius:4px;font-size:11px;">${safeText(a.alertType)}</span></td>
       <td style="padding:6px 10px;border:1px solid #e2e8f0;">${safeText(a.pairLabel || '-')}</td>
       <td style="padding:6px 10px;border:1px solid #e2e8f0;">${asinImageThumb(a.ourASIN)}</td>

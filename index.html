@@ -368,9 +368,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helv
 .pair-detail-filter-row .filter-select { width: 160px; min-width: 140px; height: 34px; font-size: 12px; border-color: #dbe3f0; }
 .pair-detail-filter-row #pairDiffFilterCategoryTop,
 .pair-detail-filter-row #pairDiffFilterLabelTop { width: 180px; }
-.pair-detail-table-wrap { overflow-x: auto; border: 1px solid #e5e7eb; border-radius: 8px; background: #fff; }
+.pair-detail-table-wrap { overflow: auto; max-height: min(62vh, 100%); border: 1px solid #e5e7eb; border-radius: 8px; background: #fff; }
 .pair-detail-table { min-width: 1510px; table-layout: fixed; font-size: 12px; }
 .pair-detail-table th { width: 110px; padding: 8px 6px; background: #f8fafc; color: #475569; border-bottom: 1px solid #dbe3f0; white-space: nowrap; text-align: center; }
+/* 表头固定：让滚动容器内的 thead 始终停在顶部，滚动时也能看清列含义 */
+.pair-detail-table thead th { position: sticky; top: 0; z-index: 6; box-shadow: inset 0 -1px 0 #dbe3f0, 0 1px 3px rgba(15, 23, 42, .06); }
+/* 价格预警明细表（竞品活动/降价等）表头同样固定 */
+.price-alert-detail-table thead th { position: sticky; top: 0; z-index: 6; background: #f1f5f9; box-shadow: inset 0 -1px 0 #e2e8f0, 0 1px 3px rgba(15, 23, 42, .06); }
 .pair-detail-table td { width: 110px; padding: 8px 6px; color: #334155; vertical-align: middle; text-align: center; }
 .pair-detail-table tbody tr:nth-child(even) td { background: #fcfcfd; }
 .pair-detail-table tbody tr:hover td { background: #f8fafc; }
@@ -9576,7 +9580,7 @@ function openPriceAlertListModal(title, alerts) {
       </select>
     </div>
     <div style="overflow-x:auto;max-height:60vh;">
-      <table style="width:100%;border-collapse:collapse;font-size:12px;">
+      <table class="price-alert-detail-table" style="width:100%;border-collapse:collapse;font-size:12px;">
         <thead><tr style="background:#f1f5f9;">
           <th style="padding:6px 10px;border:1px solid #e2e8f0;">类型</th>
           <th style="padding:6px 10px;border:1px solid #e2e8f0;">竞品类型</th>

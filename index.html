@@ -1070,7 +1070,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helv
         <div class="rating-panel-head">
           <div>
             <div class="rating-panel-title">⭐ 评分对比（我方 vs 竞卖）</div>
-            <div class="rating-panel-sub">选好筛选条件即出结果；站点 / BU / 三级分类三个维度同时展示</div>
+            <div class="rating-panel-sub">默认仅展示站点（MX / BR）维度；按 BU / 三级分类 / 负责人 筛选后再展开对应维度明细</div>
           </div>
           <div class="rating-panel-ctrl">
             <span>截止日期</span>
@@ -10303,35 +10303,59 @@ function renderRatingCompare() {
       '</div>';
   }
 
+  /* 是否做了维度筛选（BU / 三级分类 / 负责人）——只有筛选时才展开明细维度 */
+  var hasDimFilter = !!(rsel('ratingFilterBU') || rsel('ratingFilterCategory') || rsel('ratingFilterManager'));
+  var elBUBlock = document.getElementById('ratingBUBlock');
+  var elCatBlock = document.getElementById('ratingCatBlock');
+
   if (!items.length) {
-    ['ratingSiteBlock', 'ratingBUBlock', 'ratingCatBlock'].forEach(function(id) {
-      var el = document.getElementById(id);
-      if (el) el.innerHTML = '<div class="empty-state">当前筛选条件下没有 ASIN</div>';
+    var elSiteEmpty = document.getElementById('ratingSiteBlock');
+    if (elSiteEmpty) elSiteEmpty.innerHTML = '<div class="empty-state">当前筛选条件下没有 ASIN</div>';
+    [elBUBlock, elCatBlock].forEach(function(el) {
+      if (!el) return;
+      if (hasDimFilter) { el.style.display = ''; el.innerHTML = '<div class="empty-state">当前筛选条件下没有 ASIN</div>'; }
+      else { el.innerHTML = ''; el.style.display = 'none'; }
     });
     if (noteEl) noteEl.innerHTML = '';
     return;
   }
 
-  /* 站点维度 */
+  /* 站点（国家）维度——始终展示 */
   renderRatingSiteBlock(items, d, siteFilter);
 
-  /* BU 维度 */
-  var buMap = {}, buOrder = [];
-  items.forEach(function(a) {
-    var k = a.BU || '(未分配BU)';
-    if (!buMap[k]) { buMap[k] = []; buOrder.push(k); }
-    buMap[k].push(a);
-  });
-  renderRatingSplitBlock('ratingBUBlock', 'BU', buOrder.map(function(k) { return { label: k, items: buMap[k] }; }), d, minN, siteFilter, 0);
+  if (!hasDimFilter) {
+    /* 未做任何筛选：只给站点总览，隐藏 BU / 三级分类明细 */
+    [elBUBlock, elCatBlock].forEach(function(el) {
+      if (el) { el.innerHTML = ''; el.style.display = 'none'; }
+    });
+  } else {
+    /* 已单独选定某个 BU 时，BU 维度只剩一行（与上方 KPI 重复），直接跳过 */
+    var showBUBlock = !rsel('ratingFilterBU');
+    if (elBUBlock) elBUBlock.style.display = showBUBlock ? '' : 'none';
+    if (elCatBlock) elCatBlock.style.display = '';
 
-  /* 三级分类维度 */
-  var catMap = {}, catOrder = [];
-  items.forEach(function(a) {
-    var k = a.category || '(无分类)';
-    if (!catMap[k]) { catMap[k] = []; catOrder.push(k); }
-    catMap[k].push(a);
-  });
-  renderRatingSplitBlock('ratingCatBlock', '三级分类', catOrder.map(function(k) { return { label: k, items: catMap[k] }; }), d, minN, siteFilter, 15);
+    /* BU 维度 */
+    if (showBUBlock) {
+      var buMap = {}, buOrder = [];
+      items.forEach(function(a) {
+        var k = a.BU || '(未分配BU)';
+        if (!buMap[k]) { buMap[k] = []; buOrder.push(k); }
+        buMap[k].push(a);
+      });
+      renderRatingSplitBlock('ratingBUBlock', 'BU', buOrder.map(function(k) { return { label: k, items: buMap[k] }; }), d, minN, siteFilter, 0);
+    } else if (elBUBlock) {
+      elBUBlock.innerHTML = '';
+    }
+
+    /* 三级分类维度 */
+    var catMap = {}, catOrder = [];
+    items.forEach(function(a) {
+      var k = a.category || '(无分类)';
+      if (!catMap[k]) { catMap[k] = []; catOrder.push(k); }
+      catMap[k].push(a);
+    });
+    renderRatingSplitBlock('ratingCatBlock', '三级分类', catOrder.map(function(k) { return { label: k, items: catMap[k] }; }), d, minN, siteFilter, 15);
+  }
 
   /* 说明 */
   if (noteEl) {
@@ -10345,7 +10369,10 @@ function renderRatingCompare() {
       '<span style="margin-right:12px;">筛选：<b>' + safeText(desc) + '</b></span>' +
       '<span style="margin-right:12px;">均分 = 按 ASIN <b>简单平均</b>（非评论数加权）</span>' +
       '<span style="margin-right:12px;">竞卖 = 非本品牌</span>' +
-      '<span>仅统计当日有评分的 ASIN；BU/分类维度仅显示「某站我方或竞卖样本 ≥ ' + minN + '」的行</span>';
+      '<span>仅统计当日有评分的 ASIN' +
+      (hasDimFilter ? '；BU/分类维度仅显示「某站我方或竞卖样本 ≥ ' + minN + '」的行' : '；未筛选时仅展示站点维度，选择 BU / 分类 / 负责人 可展开明细') +
+      '</span>';
+
   }
 }
 

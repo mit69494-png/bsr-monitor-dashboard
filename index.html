@@ -128,6 +128,41 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helv
 .mgr-cell-click:hover { background: #eef2ff; }
 .mgr-detail-tag { display: inline-block; padding: 1px 7px; border-radius: 999px; background: #eef2ff; color: #4338ca; font-size: 11px; font-weight: 700; }
 
+/* ===== 评分对比模块 ===== */
+.rating-kpi-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.rating-kpi { flex: 1; min-width: 170px; background: linear-gradient(135deg, #f8f9ff, #f0f0ff); border: 1px solid #e0e7ff; border-radius: 12px; padding: 13px 18px; }
+.rating-kpi-label { font-size: 12px; color: #64748b; font-weight: 600; }
+.rating-kpi-value { font-size: 26px; font-weight: 800; margin-top: 3px; line-height: 1.15; }
+.rating-kpi-value.mine { color: #4f46e5; }
+.rating-kpi-value.comp { color: #d97706; }
+.rating-kpi-value.pos { color: #16a34a; }
+.rating-kpi-value.neg { color: #dc2626; }
+.rating-kpi-sub { font-size: 11px; color: #94a3b8; margin-top: 3px; }
+.rating-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.rating-table th { background: #e8eaf6; color: #475569; font-weight: 700; padding: 9px 12px; text-align: center; border-bottom: 1px solid #dbe3f0; white-space: nowrap; }
+.rating-table th:first-child, .rating-table td:first-child { text-align: left; }
+.rating-table td { padding: 9px 12px; border-bottom: 1px solid #f0f0f0; text-align: center; vertical-align: middle; }
+.rating-table tbody tr:hover td { background: #f8f9ff; }
+.rating-table tr.rating-total td { background: #f1f5f9; font-weight: 800; }
+.rating-table tr.rating-total:hover td { background: #e8eef7; }
+.rating-dim { font-weight: 700; color: #334155; }
+.rating-dim-sub { display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 999px; background: #eef2ff; color: #4338ca; font-size: 10px; font-weight: 700; }
+.rating-val { font-size: 16px; font-weight: 800; }
+.rating-val.mine { color: #4f46e5; }
+.rating-val.comp { color: #d97706; }
+.rating-n { font-size: 11px; color: #94a3b8; font-weight: 400; display: block; margin-top: 1px; }
+.rating-delta { font-weight: 800; font-size: 14px; }
+.rating-delta.pos { color: #16a34a; }
+.rating-delta.neg { color: #dc2626; }
+.rating-delta.zero { color: #94a3b8; }
+.rating-bars { display: flex; flex-direction: column; gap: 3px; min-width: 150px; }
+.rating-bars .bar-row { display: flex; align-items: center; gap: 6px; }
+.rating-bars .bar-label { font-size: 10px; color: #94a3b8; width: 24px; text-align: right; flex: 0 0 auto; }
+.rating-bars .bar-track { flex: 1; height: 8px; background: #f1f5f9; border-radius: 4px; overflow: hidden; }
+.rating-bars .bar-fill { display: block; height: 100%; border-radius: 4px; }
+.rating-hi { font-size: 12px; color: #475569; }
+.rating-hi .sep { color: #cbd5e1; margin: 0 4px; }
+
 /* ASIN detail table */
 .detail-table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .detail-table th { background: #f5f6fa; padding: 10px 12px; text-align: left; font-weight: 600; color: #555; border-bottom: 2px solid #eee; }
@@ -440,6 +475,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helv
     <button class="module-tab active" onclick="switchModule('position')" data-page-node-id="mZLkKvRkwSqnCP0KkLCZPo">📊 BSR监控</button>
     <button class="module-tab" onclick="switchModule('price')" data-page-node-id="82bquXbXcMKSsIdMWSFseD">💰 价格变动</button>
     <button class="module-tab" onclick="switchModule('market')" data-page-node-id="E2jPpAoZcxbDLIERF6CBOx">📈 均价&amp;价差</button>
+    <button class="module-tab" onclick="switchModule('rating')" data-page-node-id="rateTabBtn01">⭐ 评分对比</button>
     <button class="module-tab" onclick="switchModule('activity')" data-page-node-id="6O5PFj9nCrW0uFbFkFJjA5">🎯 活动分析</button>
     <button class="module-tab" onclick="switchModule('products')" data-page-node-id="lKfaEDdPhGnRUTB8ewqCkq">📦 产品列表</button>
   </div>
@@ -828,6 +864,41 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helv
       </div>
 
       <div id="avgPriceSection" style="margin-top:16px;" data-page-node-id="6tvhAOiBUEVEfBmG9cUjfy"><div style="background:linear-gradient(135deg,#f8f9ff,#f0f0ff);border-radius:12px;padding:16px 20px;border:1px solid #e0e7ff;" data-page-node-id="aXNLMk3uJJiZR0IGZvvmRk"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;" data-page-node-id="VsNzGwJoCbpFOasXZLFY2g"><div style="font-size:15px;font-weight:600;color:#333;" data-page-node-id="gNYdYAaTiGno4rbVqFutku">市场均价分析</div><div style="font-size:12px;color:#888;" data-page-node-id="QH2gv6nW0vEzih0O1SWPoT">全部 | 最新日期 10-7</div></div><table style="width:100%;border-collapse:collapse;font-size:13px;" data-page-node-id="dXYF4uq9rh0epqp5rXI7hX"><thead data-page-node-id="LL0OAOA51jr3A8QdmEPb3A"><tr style="background:#e8eaf6;" data-page-node-id="7Plqi6JOe4Q9bPeFXzii70"><th style="padding:8px 16px;text-align:left;border-radius:8px 0 0 0;" data-page-node-id="JAx9KDofIeaE4ue7neSDzH">分组</th><th style="padding:8px 16px;text-align:center;" data-page-node-id="pSNKz4xqk0yW25lAUFDmbZ">最新均价 (10-7)</th><th style="padding:8px 16px;text-align:center;" data-page-node-id="SamxzwAOukOPFVmeIl2tRt">近7天均价</th><th style="padding:8px 16px;text-align:center;" data-page-node-id="U4eeSJ8XojhmoXzuljWqq3">近30天均价</th><th style="padding:8px 16px;text-align:center;border-radius:0 8px 0 0;" data-page-node-id="FtnmG2TpB90QckIP0ceysg">7天 vs 30天</th></tr></thead><tbody data-page-node-id="yNsxemb6OujBuOMkxnL2sT"><tr data-page-node-id="Zfdfzcvsw6PPaXChhI9zlN"><td style="padding:10px 16px;border-bottom:1px solid #f0f0f0;font-weight:600;color:#667eea;" data-page-node-id="p4HaXDnm6LOgndAAY4QHg3">本品牌<br data-page-node-id="eOTva8zNPIDF0YGcDDEjtR"><span style="font-size:11px;color:#999;font-weight:400;" data-page-node-id="OM73HfPfLtPDVa3VYUMnqj">382 个ASIN</span></td><td style="padding:10px 16px;text-align:center;border-bottom:1px solid #f0f0f0;font-size:15px;font-weight:600;" data-page-node-id="iEn4gXykJy9UZDfz5Ny0Hh">963.19</td><td style="padding:10px 16px;text-align:center;border-bottom:1px solid #f0f0f0;font-size:15px;font-weight:600;" data-page-node-id="Af6NdGNFtnhdFctkyIHaGk">1038.59</td><td style="padding:10px 16px;text-align:center;border-bottom:1px solid #f0f0f0;font-size:15px;font-weight:600;" data-page-node-id="PMX8us5Ix01VZ15V60jRp8">1042.25</td><td style="padding:10px 16px;text-align:center;border-bottom:1px solid #f0f0f0;font-size:15px;font-weight:600;" data-page-node-id="O7H0qkxcnPG92sT5TRYHNM"><span style="color:#22c55e;" data-page-node-id="yMhVWwhB5FSOmb6XVyFuYY">↓ 0.35%</span></td></tr><tr style="background:#fafaff;" data-page-node-id="LhHKEX0ovwLWMud9fuNgZj"><td style="padding:6px 16px;border-bottom:1px solid #f0f0f0;font-size:12px;color:#888;padding-left:36px;" data-page-node-id="Fu2BDOD7j7hojvI7VhT9ka">└ 本品牌 MX <span style="color:#ccc;" data-page-node-id="tk3B1YTIIh2JQD0OfgjnA5">(382)</span></td><td style="padding:6px 16px;text-align:center;border-bottom:1px solid #f0f0f0;font-size:12px;color:#888;" data-page-node-id="IXxJ2BXcL50gsqCxjf5CXp">963.19</td><td style="padding:6px 16px;text-align:center;border-bottom:1px solid #f0f0f0;font-size:12px;color:#888;" data-page-node-id="laADNmq1NWwtLrDr4VDOs9">1038.59</td><td style="padding:6px 16px;text-align:center;border-bottom:1px solid #f0f0f0;font-size:12px;color:#888;" data-page-node-id="g7XpKMaxNT8TnLz0bGIQrj">1042.25</td><td style="padding:6px 16px;text-align:center;border-bottom:1px solid #f0f0f0;font-size:12px;" data-page-node-id="rpc97jGdTOKY7h0Aa7gEdC"><span style="color:#22c55e;" data-page-node-id="0Nzt89GBjy29DynnWLRaKA">↓ 0.35%</span></td></tr><tr data-page-node-id="zg7xOAHRhXfWHVHMJri8lZ"><td style="padding:10px 16px;border-bottom:1px solid #f0f0f0;font-weight:600;color:#f59e0b;" data-page-node-id="7R5uOSFnGICUWAUVQGczWK">非本品牌<br data-page-node-id="C4Ck4GzdvBntCKiXBFEsrt"><span style="font-size:11px;color:#999;font-weight:400;" data-page-node-id="czQMkUPSPIoilqyjStKVgG">6 个ASIN</span></td><td style="padding:10px 16px;text-align:center;border-bottom:1px solid #f0f0f0;font-size:15px;font-weight:600;" data-page-node-id="LhnMyM57OVi7bAX5BGp6Mu">787.71</td><td style="padding:10px 16px;text-align:center;border-bottom:1px solid #f0f0f0;font-size:15px;font-weight:600;" data-page-node-id="M9txFwVadYCd3VGmbQUilA">1085.03</td><td style="padding:10px 16px;text-align:center;border-bottom:1px solid #f0f0f0;font-size:15px;font-weight:600;" data-page-node-id="U90dgbdJsEE4xB699BbnNO">995.15</td><td style="padding:10px 16px;text-align:center;border-bottom:1px solid #f0f0f0;font-size:15px;font-weight:600;" data-page-node-id="gCdrEIHTJ9dFXqQZ7bN2gT"><span style="color:#ef4444;" data-page-node-id="guSTW367HConyNFYhvOygG">↑ 9.03%</span></td></tr><tr style="background:#fafaff;" data-page-node-id="jDhnbDBTeVcGZaqM2gVLQM"><td style="padding:6px 16px;border-bottom:1px solid #f0f0f0;font-size:12px;color:#888;padding-left:36px;" data-page-node-id="sR92PZI0FuZnmNqHDQkN1h">└ 非本品牌 MX <span style="color:#ccc;" data-page-node-id="e8uYbHgiLdDPK33BfsEH8C">(6)</span></td><td style="padding:6px 16px;text-align:center;border-bottom:1px solid #f0f0f0;font-size:12px;color:#888;" data-page-node-id="40x9uw45ztu66fVMOPpwqm">787.71</td><td style="padding:6px 16px;text-align:center;border-bottom:1px solid #f0f0f0;font-size:12px;color:#888;" data-page-node-id="n2w7h3gPOq8K3rGCcv3mfi">1085.03</td><td style="padding:6px 16px;text-align:center;border-bottom:1px solid #f0f0f0;font-size:12px;color:#888;" data-page-node-id="O5vtKK8jOJaPZN1rvzMitO">995.15</td><td style="padding:6px 16px;text-align:center;border-bottom:1px solid #f0f0f0;font-size:12px;" data-page-node-id="HRzbeHbBSzKXXUMHGx1z5y"><span style="color:#ef4444;" data-page-node-id="V1ZvPQqBa3vmj4cNS5cCiu">↑ 9.03%</span></td></tr><tr style="background:#fffbf0;border-top:2px solid #f59e0b;" data-page-node-id="K1Vz1OBhfAEkrXQnHNEsw1"><td style="padding:10px 16px;border-bottom:1px solid #f0f0f0;font-weight:600;color:#333;" data-page-node-id="ZnLlZqrUcFV37ZxxmQ7H1c">本品牌 vs 非本品牌价差</td><td style="padding:10px 16px;text-align:center;border-bottom:1px solid #f0f0f0;font-size:14px;" data-page-node-id="af2eKtJJmD2iBQHOkobyEj"><span style="color:#ef4444;font-weight:600;" data-page-node-id="xIdAArcB7G8yAoHAK2ypBE">+175.48</span><br data-page-node-id="Q0Rjb888iadTgqTSyH09ki"><span style="font-size:10px;color:#ef4444;" data-page-node-id="5DyAozTMvRcMApbljzNlQg">(+22.3%)</span></td><td style="padding:10px 16px;text-align:center;border-bottom:1px solid #f0f0f0;font-size:14px;" data-page-node-id="d4DRGMATyEmjOmucyH0Tnp"><span style="color:#22c55e;font-weight:600;" data-page-node-id="uFoaCfFjUZ18NBhCgo9Fb4">-46.44</span><br data-page-node-id="7azdfhJVHsl5MbpcH1HjA8"><span style="font-size:10px;color:#22c55e;" data-page-node-id="T8oteMMN2CBemfZQyA5HhN">(-4.3%)</span></td><td style="padding:10px 16px;text-align:center;border-bottom:1px solid #f0f0f0;font-size:14px;" data-page-node-id="KuEN7OPv41I45ayqs10T9Z"><span style="color:#ef4444;font-weight:600;" data-page-node-id="Kj6qiSyQBnAUgVDv6pJwNx">+47.10</span><br data-page-node-id="XkuooNG6OQClrSUem9kWvM"><span style="font-size:10px;color:#ef4444;" data-page-node-id="UPAU3xqfMubL51TLgAOvYd">(+4.7%)</span></td><td style="padding:10px 16px;text-align:center;border-bottom:1px solid #f0f0f0;font-size:13px;color:#999;" data-page-node-id="rDmwWX3gHtFMyyoZWcOkde">本品牌相对于非本品牌的价差</td></tr></tbody></table></div><div class="pair-diff-chart-section" data-page-node-id="JVAkHkR7rhEqCKOtfSRbIt"><div class="pair-diff-chart-title" data-page-node-id="2sGV0N6XKqgWwkFSW3nNFo"><span class="label-tag all" data-page-node-id="9TuxRkRUuCrpEaGDsJSJWm">全部竞品</span><span style="font-size:13px;color:#555;" data-page-node-id="T2YfqP9q9QMQUHarjgIUMb">竞品价差：BU维度溢价成功/失败 | 共 <b data-page-node-id="lqkqa1m8InsEk3Xef1wSFI">109</b> 对</span><span style="margin-left:auto;font-size:12px;color:#888;" data-page-node-id="uGn6xHpYVZ0PLp4vyOxbgj">点击 BU 查看三级分类和 ASIN 明细</span></div><div class="pair-diff-chart-legend" data-page-node-id="9jSJMGGOMoJ6D5Rt3J2IBG"><span class="legend-item" data-page-node-id="mLXngGnJ8B3c637f70swu6"><span class="legend-swatch lower" data-page-node-id="KN2smjBpawuVBVZyLzcKy9"></span> 溢价成功 (57对, 52.3%)</span><span class="legend-item" data-page-node-id="B7Us2MvDRPFReQMQIyqaMd"><span class="legend-swatch higher" data-page-node-id="CaDthGnfIAhwN5dIUxQ2Jl"></span> 溢价失败 (48对, 44.0%)</span><span class="legend-item" style="color:#999;" data-page-node-id="HunjnBOznv3lX75IIY9ZBD"><span class="legend-swatch" style="background:#cbd5e1;" data-page-node-id="rDalhPIXt2B4xhqkkLpuHJ"></span> 无法判断 (4对, 3.7%)</span></div><div class="pair-premium-grid" data-page-node-id="JFFUNGzDQKVAjqyIhqrPvA"><div class="pair-premium-card" onclick="openPairDiffBUDetail('buPremium_0', '家具BU')" data-page-node-id="Zq0gIOqq7xi2LEg4zH4iEk"><div class="bu-name" data-page-node-id="6C7bfNhcNGAJ49QE6MjQlt"><span data-page-node-id="cydFHOrliJ4VHFfAYE935b">家具BU</span><span class="pair-count" data-page-node-id="egGfbJP09pt6MX8z63zdVS">32 对</span></div><div class="pair-premium-bar" data-page-node-id="VPH1iDyTlbooRwBqw8Hnob"><div class="success" style="width:56.25%;" data-page-node-id="h7DRhPhnShHH68DYyOKGgg"></div><div class="fail" style="width:43.75%;" data-page-node-id="LZ5xKGw073PlrXWzK2asPc"></div><div class="unknown" style="width:0.00%;" data-page-node-id="Yz4GVzv4Ab6AZAf7BrzcXz"></div></div><div class="pair-premium-metrics" data-page-node-id="zpxg1fPqmFAi27nY3itmkE"><div class="pair-premium-metric" data-page-node-id="JrGWNgcZZj0tjSVYoDV1Wt"><div class="label" data-page-node-id="b7zKRlYbDaeQuT9iBZXXHN">溢价成功</div><div class="value" style="color:#22c55e;" data-page-node-id="d94KvtTVRHOTp3FR362IUE">18 <span style="font-size:11px;font-weight:600;" data-page-node-id="YSDmKXgOwG9EzvbwmH3Zcs">56.3%</span></div></div><div class="pair-premium-metric fail-metric" data-page-node-id="By9fiwQl4LKQWT1dPOZObd"><div class="label" data-page-node-id="GjB5Y3nx8DrMwzmVMfWcte">溢价失败</div><div class="value" style="color:#dc2626;" data-page-node-id="vKdbGeQhAHWdC3AhJs6BAl">14 <span style="font-size:11px;font-weight:600;" data-page-node-id="CSVxFtZ2edp7dfuuzoDWyM">43.8%</span></div></div></div></div><div class="pair-premium-card" onclick="openPairDiffBUDetail('buPremium_1', '衣物收纳BU')" data-page-node-id="YMzHVKT2sYJK9kDlwIeNQu"><div class="bu-name" data-page-node-id="n0PwRigKPEe85NFnd3uCFu"><span data-page-node-id="aMScXZbycscIdlwzn2lSAq">衣物收纳BU</span><span class="pair-count" data-page-node-id="JUWDsHhGwrLvM7vIcbPu7z">25 对</span></div><div class="pair-premium-bar" data-page-node-id="tu16HCUbpTYVdOsYm8Kp9n"><div class="success" style="width:64.00%;" data-page-node-id="3UM5zIyK1Ax1BQWtaEwG2G"></div><div class="fail" style="width:32.00%;" data-page-node-id="66LkliwHaw3ekXorhNQPW3"></div><div class="unknown" style="width:4.00%;" data-page-node-id="Fdu9Bp0YUZGeApiQllKwSb"></div></div><div class="pair-premium-metrics" data-page-node-id="D7unggf71mQ2DUCzVmY2yD"><div class="pair-premium-metric" data-page-node-id="EDfLVruSeR0sNPg75PNgEY"><div class="label" data-page-node-id="xxnHa4zlwZT4QEFquZEuXM">溢价成功</div><div class="value" style="color:#22c55e;" data-page-node-id="EReRwEiEWpJEhfcMOtMINQ">16 <span style="font-size:11px;font-weight:600;" data-page-node-id="Yu27EvdKRujZYMRtDevg4u">64.0%</span></div></div><div class="pair-premium-metric fail-metric" data-page-node-id="GsqsHqqtxKwCf7AKLXDJ2f"><div class="label" data-page-node-id="v9KHCY7sStlpp34tzbRd7v">溢价失败</div><div class="value" style="color:#dc2626;" data-page-node-id="6WT3bJ8WICA5cS3HoGVs4T">8 <span style="font-size:11px;font-weight:600;" data-page-node-id="CMn3QPMuSSPa33BuEqXX3h">32.0%</span></div></div></div><div style="font-size:11px;color:#94a3b8;margin-top:8px;" data-page-node-id="EejNXRgXu4avwrdASAXg1G">无法判断：1 对（BSR缺失或价格持平）</div></div><div class="pair-premium-card" onclick="openPairDiffBUDetail('buPremium_2', '装饰&amp;桌椅BU')" data-page-node-id="6xXYcc3FoQLenyHLF4HAHF"><div class="bu-name" data-page-node-id="GgHtVfcK075OWRQy0tehuT"><span data-page-node-id="a5hKmkAYKOzgr3ES3vJhA5">装饰&amp;桌椅BU</span><span class="pair-count" data-page-node-id="1LY8jONMAmaPfUFmvtPf3O">20 对</span></div><div class="pair-premium-bar" data-page-node-id="XcClJd5RGA2SvfTvQNC06e"><div class="success" style="width:50.00%;" data-page-node-id="4UsHM2CenJ0FDQGwA7Vbje"></div><div class="fail" style="width:50.00%;" data-page-node-id="AdvukJ4qY2rl3Fm62sycC9"></div><div class="unknown" style="width:0.00%;" data-page-node-id="KzkuVFlRtXJd7ZsEonbrX6"></div></div><div class="pair-premium-metrics" data-page-node-id="T8r5V1TaQvTgqBY26Iq0Uk"><div class="pair-premium-metric" data-page-node-id="7UnPUxnhp0CK4AF9NSw0HU"><div class="label" data-page-node-id="2VRtz0UqBKDiYB4JHHJvyp">溢价成功</div><div class="value" style="color:#22c55e;" data-page-node-id="gxaBGutKlw56yBfQJChugD">10 <span style="font-size:11px;font-weight:600;" data-page-node-id="spAgtbsN4PPE5GwBlkyPaP">50.0%</span></div></div><div class="pair-premium-metric fail-metric" data-page-node-id="mM5dJGoBQhlJptZTck0XrX"><div class="label" data-page-node-id="vGP0Qz3UuQoXHcpC2a0pji">溢价失败</div><div class="value" style="color:#dc2626;" data-page-node-id="6ElwdAqBQkOJHF1Hqw0MMT">10 <span style="font-size:11px;font-weight:600;" data-page-node-id="FyxaDpycwNJz69IkFcLbhW">50.0%</span></div></div></div></div><div class="pair-premium-card alert-low-success" onclick="openPairDiffBUDetail('buPremium_3', '厨卫&amp;寝具BU')" data-page-node-id="MsLew94GaegAKQFP0Kpfvi"><div class="bu-name" data-page-node-id="AlN8Gc8AfHxPmiVt6A8gOf"><span data-page-node-id="ZDEmmQsURODCVADQGbWIZ0">厨卫&amp;寝具BU</span><span class="pair-count" data-page-node-id="GyEEm1XZW8ZJIIA9dIaJSB">15 对</span></div><div class="pair-premium-bar" data-page-node-id="HBtUdjDEvIwBRSJgxfgfqv"><div class="success" style="width:26.67%;" data-page-node-id="k0H0CdQFGTcCktNpaPHePc"></div><div class="fail" style="width:73.33%;" data-page-node-id="FyH0th3sCsTF3T8QCXr1Ok"></div><div class="unknown" style="width:0.00%;" data-page-node-id="wgdvHZdDNj3887TT1SFV1c"></div></div><div class="pair-premium-metrics" data-page-node-id="Bltd8eWZc2BfeVmVNXnvgr"><div class="pair-premium-metric" data-page-node-id="j5M2JuOkPq804GBAfyopKg"><div class="label" data-page-node-id="I04IPG3y63qKrIYBrJBTHE">溢价成功</div><div class="value" style="color:#22c55e;" data-page-node-id="EskDwJ2Z6OanFlFwFwFFuh">4 <span style="font-size:11px;font-weight:600;" data-page-node-id="qygBtN3SBgF6w5VFR7NEjk">26.7%</span></div></div><div class="pair-premium-metric fail-metric" data-page-node-id="4KzvsDzjUVfc93IUsa0Vn8"><div class="label" data-page-node-id="Ha1NgCcD15lhDHYUYGIDgf">溢价失败</div><div class="value" style="color:#dc2626;" data-page-node-id="UOQLHfpIfs0sh5VlMY6BNF">11 <span style="font-size:11px;font-weight:600;" data-page-node-id="GRQxY8bQExGe7gtvRDk5gC">73.3%</span></div></div></div></div><div class="pair-premium-card" onclick="openPairDiffBUDetail('buPremium_4', '户外休闲BU')" data-page-node-id="qOorI4D4CfBYXQViPvKWb6"><div class="bu-name" data-page-node-id="rHjSTnC8mB0NvwM4a1T3Wp"><span data-page-node-id="eiywwLdsw65cfZs0yNhuue">户外休闲BU</span><span class="pair-count" data-page-node-id="Km9KYw1BhpGA1sJI16CDFM">12 对</span></div><div class="pair-premium-bar" data-page-node-id="yxGp0KmoRpCBWz4Nx8UffP"><div class="success" style="width:41.67%;" data-page-node-id="wK158g2KPYWYnl2UcQmD7l"></div><div class="fail" style="width:33.33%;" data-page-node-id="V561i3fdEA15VsL1Ygpr52"></div><div class="unknown" style="width:25.00%;" data-page-node-id="1Lv06z9cQo6a1HSZlup7C7"></div></div><div class="pair-premium-metrics" data-page-node-id="5FFlOBoHj7QzEEDG88gmY7"><div class="pair-premium-metric" data-page-node-id="ZktF8eJlHo7T2G93kzRcaD"><div class="label" data-page-node-id="AHrj48ict2RyWBcVqcvR7N">溢价成功</div><div class="value" style="color:#22c55e;" data-page-node-id="ubT9uXe6aplDwrdwsSYK1h">5 <span style="font-size:11px;font-weight:600;" data-page-node-id="TKiNaH4Mel4GSYx9GSmmar">41.7%</span></div></div><div class="pair-premium-metric fail-metric" data-page-node-id="0hpQbQkK6EKT5C56BHAG3X"><div class="label" data-page-node-id="YOX7bDgbGvUex2kPjDTZj8">溢价失败</div><div class="value" style="color:#dc2626;" data-page-node-id="0BSOMCDAubtSsUOW7s8BGH">4 <span style="font-size:11px;font-weight:600;" data-page-node-id="t1qkr2miA25fd1y0uXXZ3H">33.3%</span></div></div></div><div style="font-size:11px;color:#94a3b8;margin-top:8px;" data-page-node-id="hLIWukSWLW8n9arDgkQhqn">无法判断：3 对（BSR缺失或价格持平）</div></div><div class="pair-premium-card" onclick="openPairDiffBUDetail('buPremium_5', '宠物用品BU')" data-page-node-id="ykOiWZrp8ecdRlOnzdGj18"><div class="bu-name" data-page-node-id="uwwZtUryw2NREeB5qlAy0R"><span data-page-node-id="GmpQi5IzQ22gJx5bfyQhzy">宠物用品BU</span><span class="pair-count" data-page-node-id="NerNZiMVA6mc67HBbOBXpO">5 对</span></div><div class="pair-premium-bar" data-page-node-id="EGLUBC7DoawzFPL7vSHeyZ"><div class="success" style="width:80.00%;" data-page-node-id="FbQazQz5l6faf2DHH1dVQ7"></div><div class="fail" style="width:20.00%;" data-page-node-id="DCt6lJfTnrfZSVKK5bFBF6"></div><div class="unknown" style="width:0.00%;" data-page-node-id="Ce45tIDrrlmOsDULZ7dq33"></div></div><div class="pair-premium-metrics" data-page-node-id="vdoUjEyNibh9wgPq4TQDCZ"><div class="pair-premium-metric" data-page-node-id="HiOXSeOJxSi9OMxRnfMXCA"><div class="label" data-page-node-id="vBQxbeMBQSaIHOVNj5ePMk">溢价成功</div><div class="value" style="color:#22c55e;" data-page-node-id="hWDmwtPsPmEG2qo6KDPSGl">4 <span style="font-size:11px;font-weight:600;" data-page-node-id="IKdiBFCkqc13za7q7x8p07">80.0%</span></div></div><div class="pair-premium-metric fail-metric" data-page-node-id="o33KulN0nIfDmJJKR8k1Km"><div class="label" data-page-node-id="HxAOfpuL5erHaJVQD4Md8s">溢价失败</div><div class="value" style="color:#dc2626;" data-page-node-id="QzAHQRSY2CJF4CTe7MI0F7">1 <span style="font-size:11px;font-weight:600;" data-page-node-id="SMZqj8sFYlH7kZzXEsvVyn">20.0%</span></div></div></div></div></div></div><div class="pair-diff-chart-section" data-page-node-id="TJdwfMy8EpJhR8W5BzqFtF"><div class="pair-diff-chart-title" data-page-node-id="pZYUo1l4mzsrd7Bj4MVYHT"><span class="label-tag all" data-page-node-id="gDKIpJTyebWE8jJSm0vu8c">全部竞品</span><span style="font-size:13px;color:#555;" data-page-node-id="JKF88nlryptyrdrlETPAiV">竞品价差分布 | 共 <b data-page-node-id="Z1U0NOJD7oxqDXz0OnUiTF">109</b> 对</span><span style="margin-left:auto;font-size:12px;color:#888;" data-page-node-id="AhuSPv9fZXWHYilN0gWch0">均价差 <b style="color:#dc2626;" data-page-node-id="qrIPhbUJIDDcghpHboNbLF">+25.1%</b></span></div><div class="pair-diff-chart-legend" data-page-node-id="bnLUUIYn6v57jdil82VonX"><span class="legend-item" data-page-node-id="wZCCbxaQSvL7okfSqkpyUh"><span class="legend-swatch higher" data-page-node-id="KV12SKBeSvIFo7ErNXpsUg"></span> 我方更贵 (61对, 56.0%)</span><span class="legend-item" data-page-node-id="EZZkbkmPQhYAskxxBH4bDE"><span class="legend-swatch lower" data-page-node-id="hzEeSvRacm0eqOYlKSBkzB"></span> 我方更便宜 (47对, 43.1%)</span><span class="legend-item" style="color:#999;" data-page-node-id="TAglTHA1aAFmOA1BP2RpW8"> 持平 (1对, 0.9%)</span></div><canvas id="pairDiffChart_all" style="width: 640px; height: 240px;" width="1280" height="480" data-page-node-id="xvkCVyAgNCUVXEieRYWdEp"></canvas><div class="pair-diff-summary" data-page-node-id="YmSkAqVah7uz9X7j6IW0Mt"><table data-page-node-id="YAoeVxTglF1vz8dVbaqGI9"><thead data-page-node-id="rJJkNMeNcFXQofmjDTasED"><tr data-page-node-id="fxB1ZCY2pVQztkudzQX5UD"><th data-page-node-id="Q67hB6HmgBLlOtvo5rugic">价差区间</th><th style="color:#dc2626;" data-page-node-id="5bsuncway0qPy1jS33FgyD">我方更贵</th><th style="color:#22c55e;" data-page-node-id="BQBC6c1fEFFmBUAkRGCLMH">我方更便宜</th><th data-page-node-id="kDLWSzM4UaA95NBQoAGTKr">合计</th><th data-page-node-id="coVZvbAYQxoBnWFaRHANwJ">占比</th><th data-page-node-id="lsIgIwlcP6jspzObuH0QlI">详情</th></tr></thead><tbody data-page-node-id="dQaOxQPv7RX1Dz1bpmO2J2"><tr data-page-node-id="16ER3UBUoMnBjpBgJmU9aj"><td data-page-node-id="HP1MXB3eoT7YEKy3YeH4ry"><b data-page-node-id="sN2jj7RBlOI1u4ExEfIk1g">50%+</b></td><td class="cell-higher" data-page-node-id="aSwNgvQsqGBkzqTUYB3yuc">28</td><td class="cell-lower" data-page-node-id="mzrvJpdumQKrLk0MsYkBzV">10</td><td data-page-node-id="Bvgm6Kw9z0rdMXDShrT3Gn"><b data-page-node-id="KeJoSHLRgNGY7qaP9e16P1">38</b></td><td style="color:#666;" data-page-node-id="fHCBfjyAzmRYqlfQDbgyYi">34.9%</td><td data-page-node-id="CmLuC6GszuqEh360dHGTw0"><button class="btn-more" style="padding:3px 10px;font-size:11px;" onclick="openPairDiffDetail('all__50__', '全部竞品', '50%+')" data-page-node-id="5NB7cR4WUdCJwTadja2A4H">详情</button></td></tr><tr data-page-node-id="vBEFU2WHZYSiP2zEiDCSSN"><td data-page-node-id="twbcX2Nm2345H6YGeSYrtY"><b data-page-node-id="It9c9xw6f5x28nbEO7uQXO">40~50%</b></td><td class="cell-higher" data-page-node-id="UFA8Gq1cvLJSOmhvDHwe7k">3</td><td class="cell-lower" data-page-node-id="1nHqZDFhyFCXp0QtUSQ9Gp">5</td><td data-page-node-id="XFhwKvEf2E4s3PHDMA3QuJ"><b data-page-node-id="8IcfvIShUhjUvKDZ728jrl">8</b></td><td style="color:#666;" data-page-node-id="xF75qoplWaxScs4mX93xIZ">7.3%</td><td data-page-node-id="OvhURiky1DvI3GGDlKDG7V"><button class="btn-more" style="padding:3px 10px;font-size:11px;" onclick="openPairDiffDetail('all__40_50_', '全部竞品', '40~50%')" data-page-node-id="GQWOYsEx3hxPEiLW3dOrz4">详情</button></td></tr><tr data-page-node-id="WBJSFl0r21JpUhtZkT7wM7"><td data-page-node-id="NZUAG5dNM02WYoakEC2VLE"><b data-page-node-id="2ygu9oEVFwI8fKhOVIt62W">30~40%</b></td><td class="cell-higher" data-page-node-id="siMIJkkuAzgMccB9v2bK8h">7</td><td class="cell-lower" data-page-node-id="YwQBNeyEa0zd8cmEBMVF8c">5</td><td data-page-node-id="aiogSapPUprJGfvdwJCX5S"><b data-page-node-id="QrA7neTPjupGaXYX5X46ez">12</b></td><td style="color:#666;" data-page-node-id="y6B9JIVTWtn45q2BwhQACC">11.0%</td><td data-page-node-id="QVOssalkHG3NQgYn4vHHm6"><button class="btn-more" style="padding:3px 10px;font-size:11px;" onclick="openPairDiffDetail('all__30_40_', '全部竞品', '30~40%')" data-page-node-id="3dNveYmRpnJoa5AKgKA2Fs">详情</button></td></tr><tr data-page-node-id="n5E7yPgt1Uodv7OegSbtJQ"><td data-page-node-id="EsCbFMgZQfbiG6q0bMYs5Z"><b data-page-node-id="ogB5FiC6lbjeCxzcGu6XHh">20~30%</b></td><td class="cell-higher" data-page-node-id="tast4HRyiR29lICi4GFI9l">5</td><td class="cell-lower" data-page-node-id="rXiQvQ0x7r9MpryNTFqLz4">7</td><td data-page-node-id="KynUgor4fhbI35vbuT5twS"><b data-page-node-id="RDj0meEXggHuynlVQVzi1N">12</b></td><td style="color:#666;" data-page-node-id="tHvLSEoiq5Q6SbiRazpg6h">11.0%</td><td data-page-node-id="paLugqqnL1Xjd3DEAMaxUM"><button class="btn-more" style="padding:3px 10px;font-size:11px;" onclick="openPairDiffDetail('all__20_30_', '全部竞品', '20~30%')" data-page-node-id="pVhf9njSGjawgYEaV44OKy">详情</button></td></tr><tr data-page-node-id="MnGWKtVCPf2QOckgHWspZX"><td data-page-node-id="7tnSgDcrHtsrQQn6bHsCa0"><b data-page-node-id="n8EGWWYQ6Ug4bSVlyYWFWN">10~20%</b></td><td class="cell-higher" data-page-node-id="cJKEm1sFkkews3Ngf3Wmd7">13</td><td class="cell-lower" data-page-node-id="FuZqRD8ByIjukqYgzUv3oJ">10</td><td data-page-node-id="hrhPSQnCgGCDF4guQV2tXW"><b data-page-node-id="5ZDtIJPXBhD3Nk9Ifz4Xwm">23</b></td><td style="color:#666;" data-page-node-id="r65vKNmLUsdYsL9qO5QlqY">21.1%</td><td data-page-node-id="DB9yQEGZVPE3RX3q3VempH"><button class="btn-more" style="padding:3px 10px;font-size:11px;" onclick="openPairDiffDetail('all__10_20_', '全部竞品', '10~20%')" data-page-node-id="8TRhk54DFicrpvZbMc8NyR">详情</button></td></tr><tr data-page-node-id="MxI9evk2I4bWJfbe1h7H27"><td data-page-node-id="FIfFdSAurb4EHXndAx20d2"><b data-page-node-id="JYZIapKqpErOjlzXRHmpeb">0~10%</b></td><td class="cell-higher" data-page-node-id="FG5wfv6JCKIyRq5Cqtqaom">5</td><td class="cell-lower" data-page-node-id="r0JwQUqHTiTFeUD7Gqk1K4">10</td><td data-page-node-id="zsb6qCfOcMtHyWby0tmald"><b data-page-node-id="SyqpKQ1VAqQNkHFqFeIxF1">16</b></td><td style="color:#666;" data-page-node-id="mTO6D66xR1BUsIvRPdFqXx">14.7%</td><td data-page-node-id="bGtEiIhfyjXgjNOWTvauuQ"><button class="btn-more" style="padding:3px 10px;font-size:11px;" onclick="openPairDiffDetail('all__0_10_', '全部竞品', '0~10%')" data-page-node-id="hHR0dkPFqOLDU3F0qwzcQs">详情</button></td></tr><tr style="background:#f8f9ff;font-weight:700;" data-page-node-id="lyYXrmecrCFZ0wNrgpyoRO"><td data-page-node-id="DROPn5XC5aRaHPPA3CHEIT">合计</td><td class="cell-higher" data-page-node-id="DQhpaSm2mki3XgqfsCS2ug">61</td><td class="cell-lower" data-page-node-id="VssPpJo7sZ3nFQdqTeq4UG">47</td><td data-page-node-id="JQ1yaHHOHMYMry24XM1pQ6">109</td><td data-page-node-id="CVsrfaQwyoA5znMfvW3YJa">100.0%</td><td data-page-node-id="1KU0CMNeLO3xFBt47Sspmc"></td></tr></tbody></table></div></div><div class="pair-diff-chart-section" id="pairDiffTrendSection" style="margin-top:18px;" data-page-node-id="cXDi7dEBRi2Eq3JCYCtHRE"><div class="pair-diff-chart-title" data-page-node-id="9DqQBjKbx1kQkkFlB4ddzW"><span class="label-tag all" data-page-node-id="IYAG4ufiCKYh0FM0iJX1iI">趋势</span><span style="font-size:13px;color:#555;" data-page-node-id="2Dqri3SpCzVNwNuZ72dLQp">不同价差区间的变化趋势</span></div><div id="pairDiffTrendControls" style="background:#f8f9ff;border:1px solid #e0e7ff;border-radius:10px;padding:10px 12px;margin-bottom:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:relative;" data-page-node-id="m6I27f2WSHr1q1ATsmU0DZ"><span style="font-size:12px;font-weight:600;color:#555;" data-page-node-id="r3XtY4b6u0BcECCsMVcB5R">我方价格：</span><select id="pairDiffTrendDirection" onchange="onPairDiffTrendDirectionChange()" style="height:32px;padding:0 10px;border:1px solid #c7d2fe;border-radius:8px;background:#fff;color:#4b5563;font-size:12px;cursor:pointer;" data-page-node-id="CRKEgwrXRSbB8tMvLN3qI7"><option value="all" selected="" data-page-node-id="AAEWhP4IwuchPAAPfKhmTx">全部</option><option value="higher" data-page-node-id="QObAmF5h3GxcfktEJsGEje">我方更贵</option><option value="lower" data-page-node-id="RwSRprxC7pdyNCNzhEMA5r">我方更便宜</option></select><div class="country-filter" style="margin-left:8px;margin-right:0;" data-page-node-id="S5u7LYikEN5V2AtZ7a9JCA"><button class="country-btn active" id="pairDiffTrendRange7" onclick="setPairDiffTrendRange(7)" data-page-node-id="gxxdjHw9xxLehfvzbMT0nx">近7天</button><button class="country-btn" id="pairDiffTrendRange14" onclick="setPairDiffTrendRange(14)" data-page-node-id="p1x0YvAZ4m82Eg5IF10jQJ">近14天</button></div><div style="display:flex;gap:6px;align-items:center;flex-wrap:nowrap;" data-page-node-id="HfCmZkTEpjCGHhVUeHdA8W"><span style="font-size:12px;color:#64748b;white-space:nowrap;" data-page-node-id="FLhLDBEFIFlP18j4edi85p">自选</span><select class="filter-select" id="pairDiffTrendStartDate" style="min-width:88px;font-size:13px;height:32px;" onchange="setPairDiffTrendCustomRange()" data-page-node-id="ykCB6gLuteDqczk2Gbx3wz"><option value="" data-page-node-id="ZmqPLRoDkELFqaCH0eWY7R">开始日期</option><option value="8-1" data-page-node-id="InROmdOgi4HaoP4MVHF3SF">8-1</option><option value="8-2" data-page-node-id="aSCfkdtnuTHAAHOTAFAgw2">8-2</option><option value="8-3" data-page-node-id="7KGEttzebBsvDrbgA1wtzK">8-3</option><option value="8-4" data-page-node-id="dBlldqIbfyypOc7DmpELjb">8-4</option><option value="8-5" data-page-node-id="zFw0FMVLKso3simQtnylR6">8-5</option><option value="8-6" data-page-node-id="DH3tjEaEUp115QPTDtym6o">8-6</option><option value="8-7" data-page-node-id="PVDxZM0tLXHGx5pTdgFihP">8-7</option><option value="8-8" data-page-node-id="LCU4zzJSGy6qry2tx8L3x7">8-8</option><option value="8-9" data-page-node-id="RnMyqh5VKXzzscJ88sljcH">8-9</option><option value="8-11" data-page-node-id="D398BRIIkE5st9xyyRru86">8-11</option><option value="8-12" data-page-node-id="zCdab0NBdCcmsBd0XdDEbj">8-12</option><option value="8-13" data-page-node-id="c4etPGKzsNPuIhCdkZgJrt">8-13</option><option value="8-14" data-page-node-id="3YOyjHAMhNXQrTKKxJbX02">8-14</option><option value="8-15" data-page-node-id="iioCT4v5Hi26xIOdb4T4ZR">8-15</option><option value="8-16" data-page-node-id="AVGC9Bpj9So3ekZNdYwXbV">8-16</option><option value="8-17" data-page-node-id="sxsLt7GcflKGWykUI1egTc">8-17</option><option value="8-18" data-page-node-id="IDQnZQcDcCGyDCV6MeCrqU">8-18</option><option value="8-19" data-page-node-id="GYjlk2eoKSGqXNGDnwmPtM">8-19</option><option value="8-20" data-page-node-id="OamG7T0OqQhWtDONgMlmJN">8-20</option><option value="8-21" data-page-node-id="5VMvcHK71G0VRAAfIztQrg">8-21</option><option value="8-22" data-page-node-id="ogfakoa1EiQP7uWRdufu2E">8-22</option><option value="8-23" data-page-node-id="YIVD7w3hsdXwYbP3sbSv6K">8-23</option><option value="8-24" data-page-node-id="wFVVuTp5VzhSyGzPfeiPl2">8-24</option><option value="8-25" data-page-node-id="Ya8HwjHXKD7lYGWJCCgHXa">8-25</option><option value="8-26" data-page-node-id="QBksABQ3HJFbhn6o10eSwA">8-26</option><option value="8-27" data-page-node-id="DPkLW2Zl7nq9pzdahBH7FS">8-27</option><option value="8-28" data-page-node-id="YIZ5LyTmaTnlCL6N5CCzzf">8-28</option><option value="8-29" data-page-node-id="9MMz7q3I8o0WVnfiVX9aWm">8-29</option><option value="8-30" data-page-node-id="FMENaVIv7KmIVHeTOvFMms">8-30</option><option value="8-31" data-page-node-id="k77Qnw05REvOoP4cLiP9j4">8-31</option><option value="9-1" data-page-node-id="KIlfkxvlOldZL0dRM3C3aW">9-1</option><option value="9-2" data-page-node-id="Sr0ulgGSlmXqHoVFgFR1EF">9-2</option><option value="9-3" data-page-node-id="Or8qmTMNpoZPCWkfS86eXY">9-3</option><option value="9-4" data-page-node-id="tURtvs05ufQhbYV3pnaoWK">9-4</option><option value="9-5" data-page-node-id="EBv8orVsYq7nUyyBbGejDf">9-5</option><option value="9-6" data-page-node-id="tuVtpdrlmsAADX0VLcK7Dj">9-6</option><option value="9-7" data-page-node-id="Y7MfL43RHh7RMPcTz1jyYF">9-7</option><option value="9-8" data-page-node-id="10ruX8fFjnQUurG39fhKfV">9-8</option><option value="9-9" data-page-node-id="4V80vVYCzTigpfXGGCXQsi">9-9</option><option value="9-10" data-page-node-id="bhp1xsDebD0eShJaxQ9pH0">9-10</option><option value="9-11" data-page-node-id="LHu9Xhv0d1m1P1COgHNfFk">9-11</option><option value="9-12" data-page-node-id="0uAADmaS7e2jaQlCzPwHZU">9-12</option><option value="9-13" data-page-node-id="2IuKVPg7YBqsXQXqZPJGH4">9-13</option><option value="9-14" data-page-node-id="YHY9TC5GcJaX5tR2uq0FOB">9-14</option><option value="9-15" data-page-node-id="RdFVDIsGwCnCEcdFqWO7Rk">9-15</option><option value="9-16" data-page-node-id="8pMAFlZzu2S5SzdanEpuKX">9-16</option><option value="9-17" data-page-node-id="L1OIZJM8sE601l0MYABD5M">9-17</option><option value="9-18" data-page-node-id="dOvBqYrcA6dqHyDiUYLJBH">9-18</option><option value="9-19" data-page-node-id="yBs9aSDGWd9b4Mie4KAUAF">9-19</option><option value="9-20" data-page-node-id="WoWa8VsHPvItrZDjlrFm6z">9-20</option><option value="9-21" data-page-node-id="C2GDaMnuCuYzkjzeUGFrvF">9-21</option><option value="9-22" data-page-node-id="zgAY5cIF0sz6HgR9AXCPjO">9-22</option><option value="9-23" data-page-node-id="QVpaGFv5cDAJDzQpzlu00q">9-23</option><option value="9-24" data-page-node-id="bGTp1fRceAJ7iv4gvYtPf7">9-24</option><option value="9-25" data-page-node-id="5ooOJUdJ2pAdEXg0jbzM7J">9-25</option><option value="9-26" data-page-node-id="4ivtAmPJSGfUXpIp8axomj">9-26</option><option value="9-27" data-page-node-id="5DQfrJbBCaGlstjH9H2SBG">9-27</option><option value="9-28" data-page-node-id="qkmAqKZ3jcX91ci3MiGtgH">9-28</option><option value="9-29" data-page-node-id="ViW8yKTFDHNMOaTUIWFoYN">9-29</option><option value="9-30" data-page-node-id="ok8cqUgErHOPWYhuBfBuuM">9-30</option><option value="10-1" data-page-node-id="XqJpoZz6ZYiEFfMakvVklY">10-1</option><option value="10-2" data-page-node-id="8RYvpE8MnedSzDQ2PaC6Vr">10-2</option><option value="10-3" data-page-node-id="Rfn0VCL7Reb4U7Mf4LUZuO">10-3</option><option value="10-4" data-page-node-id="TtZfI98FCvKJFFyqg2iFNd">10-4</option><option value="10-5" data-page-node-id="PNjNG0UXDEMGqXKGP1REhp">10-5</option><option value="10-6" data-page-node-id="DaaUWuGH54Jm8L02dHbWiE">10-6</option><option value="10-7" data-page-node-id="O1HBk7suM8oaeAR1NEV3RC">10-7</option></select><span style="font-size:12px;color:#64748b;" data-page-node-id="mlagaK1UKsyGVE8nVc7iMT">至</span><select class="filter-select" id="pairDiffTrendEndDate" style="min-width:88px;font-size:13px;height:32px;" onchange="setPairDiffTrendCustomRange()" data-page-node-id="YYVwAolBPzRXdl6saiBTXz"><option value="" data-page-node-id="AsVecVAEgyM11WQPAApKLW">结束日期</option><option value="8-1" data-page-node-id="N7cMENlKLmKp5dr2Dbytm8">8-1</option><option value="8-2" data-page-node-id="VzWUNYhUJlXU3nIGhQbrGe">8-2</option><option value="8-3" data-page-node-id="o2k8mZp1drd9hOPAIAxIjD">8-3</option><option value="8-4" data-page-node-id="DYBaw51JlGWoAKuOlDtxTY">8-4</option><option value="8-5" data-page-node-id="ObpcqRrRx9cw64NrBmUkli">8-5</option><option value="8-6" data-page-node-id="97db1hlfeXCPF6b2lKhf25">8-6</option><option value="8-7" data-page-node-id="EGtFZ1Ajla385ufsX1Urz5">8-7</option><option value="8-8" data-page-node-id="f83xDqZSX4tes5UyiHJjzx">8-8</option><option value="8-9" data-page-node-id="0qej1kz8fIGOSQE8EYZnCJ">8-9</option><option value="8-11" data-page-node-id="jswjL4JsiwWZWDp3Od9c99">8-11</option><option value="8-12" data-page-node-id="8GED2OT1Sl0z1pmBbwki6O">8-12</option><option value="8-13" data-page-node-id="dojtiOJdvEd2ZljkPrJx1i">8-13</option><option value="8-14" data-page-node-id="9BYJIC7WINsg2tA8seB8nf">8-14</option><option value="8-15" data-page-node-id="HX0n2LJ27pEU06NbgxrPQb">8-15</option><option value="8-16" data-page-node-id="8CdGELudtxd9Uv9cVcQAK0">8-16</option><option value="8-17" data-page-node-id="YXCiGHwclmorlVpNwYHB2S">8-17</option><option value="8-18" data-page-node-id="IjBDQJ5KW9CYipmBY0EiJB">8-18</option><option value="8-19" data-page-node-id="1vT7FuzO3imQ8CAxfAwyoO">8-19</option><option value="8-20" data-page-node-id="DN8cEu8xt9s3hOpsQjhG8a">8-20</option><option value="8-21" data-page-node-id="687WfnV56OaP2NgiTv9FQ3">8-21</option><option value="8-22" data-page-node-id="G48cDzGscYuKL1bj8zjPKE">8-22</option><option value="8-23" data-page-node-id="L9G2CjEXkj6YDxBSRxfqKS">8-23</option><option value="8-24" data-page-node-id="4tezMJIpXrjZWB7goPCBbu">8-24</option><option value="8-25" data-page-node-id="CgbiB4iEbI5NcQFlFwbjmu">8-25</option><option value="8-26" data-page-node-id="TdZGNwQ1kuHSW8CdFb4U9y">8-26</option><option value="8-27" data-page-node-id="v952fQil9NooADJAemAhWg">8-27</option><option value="8-28" data-page-node-id="bhodgSehDDxCCxj0KY45cV">8-28</option><option value="8-29" data-page-node-id="77sjNcd50shzqiG9P4d1Cv">8-29</option><option value="8-30" data-page-node-id="FVP5L0radP7wNIUE9zMX5M">8-30</option><option value="8-31" data-page-node-id="DpsoaMTR2boZlLLFiMBbtF">8-31</option><option value="9-1" data-page-node-id="EyGmVBgkIURa8pSUQpbCHe">9-1</option><option value="9-2" data-page-node-id="GLIBMjJ3BNrw3UBZqu2ubk">9-2</option><option value="9-3" data-page-node-id="2M7YH33jANZHgKe7DGcD2r">9-3</option><option value="9-4" data-page-node-id="g4B5zkWFI635Vfy1xDQLFk">9-4</option><option value="9-5" data-page-node-id="X7DDgyOcfmryPhJtKJ5zVF">9-5</option><option value="9-6" data-page-node-id="dSw869dU0b01sZBPVpkEBE">9-6</option><option value="9-7" data-page-node-id="oDHlw39fms6D3DPDpzLnNk">9-7</option><option value="9-8" data-page-node-id="GwutuUBjWjNtMduSYaDjJH">9-8</option><option value="9-9" data-page-node-id="IEJBmVSFWojpHvAWydo0Dp">9-9</option><option value="9-10" data-page-node-id="xFA5sUovFYKdid7l5lFNET">9-10</option><option value="9-11" data-page-node-id="wwNfpHjyPNXCrz4VfNhfsG">9-11</option><option value="9-12" data-page-node-id="3U4kVrfbodwZtxWbpuhpYc">9-12</option><option value="9-13" data-page-node-id="FjSYaVxdJdxAVE8vtYdDDI">9-13</option><option value="9-14" data-page-node-id="t3msEawyDg6Ae0AMDnxQIP">9-14</option><option value="9-15" data-page-node-id="rKF7o7r97tebdvN8eAAGu9">9-15</option><option value="9-16" data-page-node-id="GuixADRbXI4bow1sSYpEtz">9-16</option><option value="9-17" data-page-node-id="HvFrAgRPnJGRZixubUH0gv">9-17</option><option value="9-18" data-page-node-id="wxolhcA4OVX6RVIb6b1cSk">9-18</option><option value="9-19" data-page-node-id="YBbmjNxZqw1pBOD6j9FNcn">9-19</option><option value="9-20" data-page-node-id="0UQxjnWDyualZlP7ii26ry">9-20</option><option value="9-21" data-page-node-id="HCZHbP3jpaOL0S9T0YEG5P">9-21</option><option value="9-22" data-page-node-id="UUHLQFbTxhYWzxjKNPJ8zn">9-22</option><option value="9-23" data-page-node-id="EI5ypDlCWAlKrTST3q1Ew3">9-23</option><option value="9-24" data-page-node-id="YPNO05p0WeMLcGrkwFFk0P">9-24</option><option value="9-25" data-page-node-id="CLtsOhZ4itOqkNm31dEZVH">9-25</option><option value="9-26" data-page-node-id="1c7xo4xaKjw7XAf71Wygjm">9-26</option><option value="9-27" data-page-node-id="jj16m9labPVT5kfo7HPwV3">9-27</option><option value="9-28" data-page-node-id="GWQ1LCUO95oHlZyLSgkqOA">9-28</option><option value="9-29" data-page-node-id="pvXNkSEWFkHu7DfUzjsdhp">9-29</option><option value="9-30" data-page-node-id="i8aNg6OVqv3J2EBv7jLgRR">9-30</option><option value="10-1" data-page-node-id="j4GFMluCIjIJ7wYg34hSN4">10-1</option><option value="10-2" data-page-node-id="aTSV9fswM2lTthG3jUOiKl">10-2</option><option value="10-3" data-page-node-id="LV3F9QenhfPGRMmDwGtkN6">10-3</option><option value="10-4" data-page-node-id="JxAWViwlNksSPHNPclaygY">10-4</option><option value="10-5" data-page-node-id="RqS98kBTUNDsSZvJathYE6">10-5</option><option value="10-6" data-page-node-id="V9fHP0IJiEJyNAk5bVgW00">10-6</option><option value="10-7" data-page-node-id="hPsuTdrBZy3EbcYtHQS5Tz">10-7</option></select></div></div><canvas id="pairDiffTrendChart" style="width: 640px; height: 320px;" width="1280" height="640" data-page-node-id="TEFZiv67BlRrRUyG9DtaTn"></canvas><div id="pairDiffTrendLegend" style="display:flex;align-items:center;flex-wrap:wrap;margin:4px 0 0 52px;" data-page-node-id="QhFp8c3IkGQOb6AiITeKsk"><button type="button" onclick="togglePairDiffTrendLegendBucket('0~10%')" style="border:0;background:transparent;display:inline-flex;align-items:center;gap:8px;margin:0 14px 8px 0;padding:2px 4px;cursor:pointer;opacity:1;font-size:12px;color:#555;" data-page-node-id="hJK1RMaIlBVJWiS7I2WF0E"><span style="width:9px;height:9px;border-radius:2px;background:#667eea;display:inline-block;flex:0 0 auto;" data-page-node-id="5rIEpoUgZXWfQhztF3Eutx"></span><span data-page-node-id="1DsIYXO0gD335uayrsdjk8">0~10%</span></button><button type="button" onclick="togglePairDiffTrendLegendBucket('10~20%')" style="border:0;background:transparent;display:inline-flex;align-items:center;gap:8px;margin:0 14px 8px 0;padding:2px 4px;cursor:pointer;opacity:1;font-size:12px;color:#555;" data-page-node-id="8ChrxU9eMuWlAkENdSsQwv"><span style="width:9px;height:9px;border-radius:2px;background:#22c55e;display:inline-block;flex:0 0 auto;" data-page-node-id="a7bN4BBg3HdjXYUP9F7UYB"></span><span data-page-node-id="wVJqmYSjZ1DSw1GZEAvkQ2">10~20%</span></button><button type="button" onclick="togglePairDiffTrendLegendBucket('20~30%')" style="border:0;background:transparent;display:inline-flex;align-items:center;gap:8px;margin:0 14px 8px 0;padding:2px 4px;cursor:pointer;opacity:1;font-size:12px;color:#555;" data-page-node-id="6lFf9KbA1YGse6mE1vPCvB"><span style="width:9px;height:9px;border-radius:2px;background:#f59e0b;display:inline-block;flex:0 0 auto;" data-page-node-id="r6u9gKCUk9n9h2BZmkclFK"></span><span data-page-node-id="UvQ97DkMQvgaB9EhkVWXGI">20~30%</span></button><button type="button" onclick="togglePairDiffTrendLegendBucket('30~40%')" style="border:0;background:transparent;display:inline-flex;align-items:center;gap:8px;margin:0 14px 8px 0;padding:2px 4px;cursor:pointer;opacity:1;font-size:12px;color:#555;" data-page-node-id="cbBBGw42qJXxVlAZtARO8b"><span style="width:9px;height:9px;border-radius:2px;background:#ec4899;display:inline-block;flex:0 0 auto;" data-page-node-id="5LYe43wM222Cqb5wM5vY4a"></span><span data-page-node-id="J3MkzQfHtJ4tUnyzjSbyvw">30~40%</span></button><button type="button" onclick="togglePairDiffTrendLegendBucket('40~50%')" style="border:0;background:transparent;display:inline-flex;align-items:center;gap:8px;margin:0 14px 8px 0;padding:2px 4px;cursor:pointer;opacity:1;font-size:12px;color:#555;" data-page-node-id="mr4pyNBGQGRYHALIiEmFvv"><span style="width:9px;height:9px;border-radius:2px;background:#8b5cf6;display:inline-block;flex:0 0 auto;" data-page-node-id="htGmGiH7bRi4pPgPoD7922"></span><span data-page-node-id="LTRDgSiHgAAnQvSFD6zkMR">40~50%</span></button><button type="button" onclick="togglePairDiffTrendLegendBucket('50%+')" style="border:0;background:transparent;display:inline-flex;align-items:center;gap:8px;margin:0 14px 8px 0;padding:2px 4px;cursor:pointer;opacity:1;font-size:12px;color:#555;" data-page-node-id="7Q0opyrCIbKbScIzZv8cB4"><span style="width:9px;height:9px;border-radius:2px;background:#dc2626;display:inline-block;flex:0 0 auto;" data-page-node-id="ppzjAeFsz5XCvihZXp0alr"></span><span data-page-node-id="6jFtC3qrN7jTSUCiWJrbf6">50%+</span></button><span style="display:inline-flex;align-items:center;gap:6px;margin:0 0 8px 2px;" data-page-node-id="Ghd894VJZBhijtsGqc7SKg"><button type="button" onclick="selectAllPairDiffTrendBuckets()" style="border:1px solid #60a5fa;background:#eff6ff;color:#2563eb;border-radius:5px;padding:3px 9px;font-size:12px;line-height:1.3;cursor:pointer;" data-page-node-id="zJHbc5fMCP1OtgeRwbgMPE">全选</button><button type="button" onclick="resetPairDiffTrendBuckets()" style="border:1px solid #cbd5e1;background:#f8fafc;color:#64748b;border-radius:5px;padding:3px 9px;font-size:12px;line-height:1.3;cursor:pointer;" data-page-node-id="mQwq5XXyVjUI2yHYOrpegg">重置</button></span></div></div></div>
+    </div>
+  </div>
+
+  <!-- ========== MODULE 3.5: 评分对比 ========== -->
+  <div id="module-rating" class="module">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">⭐ 评分对比（我方 vs 竞卖）</div>
+          <div class="card-subtitle">按「站点整体 / BU / 三级分类」查看双方平均评分、差距与高分占比</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:#666;">
+          <span>截止日期</span>
+          <select class="filter-select" id="ratingDatePick" onchange="renderRatingCompare()" style="min-width:110px;"></select>
+        </div>
+      </div>
+
+      <div class="view-tabs" id="ratingDimTabs" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <button class="view-tab active" onclick="switchRatingDim('site', this)">🌍 站点整体</button>
+        <button class="view-tab" onclick="switchRatingDim('bu', this)">📦 BU 维度</button>
+        <button class="view-tab" onclick="switchRatingDim('cat', this)">🏷️ 三级分类维度</button>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;color:#666;">
+          <span>最小样本</span>
+          <select class="filter-select" id="ratingMinSample" onchange="renderRatingCompare()" style="min-width:80px;">
+            <option value="1">≥1</option>
+            <option value="3" selected>≥3</option>
+            <option value="5">≥5</option>
+            <option value="10">≥10</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="ratingSummaryBar" style="margin-top:12px;"></div>
+      <div id="ratingCompareBody" style="margin-top:12px;"></div>
+      <div id="ratingNote" style="margin-top:10px;font-size:12px;color:#94a3b8;line-height:1.7;"></div>
     </div>
   </div>
 
@@ -4190,6 +4261,7 @@ function switchModule(name, options) {
     _asinJumpReturnState = null;
   } else {
     if (name === 'market') renderAvgPrice();
+    if (name === 'rating') { initRatingDatePick(); renderRatingCompare(); }
     if (name === 'activity') { renderActivityAnalysis(); renderActivityHighlightSummary(); renderDiscountDistribution(); renderNearLowestPriceWarning(); }
   }
   if (name === 'products' && !options.skipProductRefresh) cascadingFilter();
@@ -9908,6 +9980,202 @@ function renderPriceAlertFullListTable() {
   body.innerHTML = rows;
 }
 
+/* ================= 评分对比模块（我方 vs 竞卖） ================= */
+var currentRatingDim = 'site';
+
+function switchRatingDim(dim, btn) {
+  currentRatingDim = dim;
+  var tabs = document.querySelectorAll('#ratingDimTabs .view-tab');
+  tabs.forEach(function(t) { t.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  renderRatingCompare();
+}
+
+function initRatingDatePick() {
+  var el = document.getElementById('ratingDatePick');
+  if (!el) return;
+  var allDates = (DATA.all_dates || DATA.dates || []).slice();
+  if (!allDates.length) return;
+  var cur = el.value;
+  el.innerHTML = allDates.slice().reverse().map(function(d) {
+    return '<option value="' + d + '">' + d + '</option>';
+  }).join('');
+  if (cur && allDates.indexOf(cur) >= 0) el.value = cur;
+}
+
+function getRatingAt(a, d) {
+  var v = (a && a.daily) ? a.daily[d] : null;
+  if (!v) return null;
+  var r = v.rating;
+  if (r === null || r === undefined || r === '') return null;
+  var n = Number(r);
+  return (isFinite(n) && n > 0) ? n : null;
+}
+
+function summarizeRatings(list) {
+  if (!list || !list.length) return { avg: null, n: 0, hi: null };
+  var s = 0, hi = 0;
+  list.forEach(function(x) { s += x; if (x >= 4.5) hi++; });
+  return { avg: s / list.length, n: list.length, hi: hi / list.length * 100 };
+}
+
+function calcRatingPair(items, d) {
+  var mine = [], comp = [];
+  (items || []).forEach(function(a) {
+    var r = getRatingAt(a, d);
+    if (r === null) return;
+    if (isOwnBrandAsin(a)) mine.push(r); else comp.push(r);
+  });
+  return { mine: summarizeRatings(mine), comp: summarizeRatings(comp), total: (items || []).length };
+}
+
+function fmtRating(v) { return (v === null || v === undefined) ? '--' : Number(v).toFixed(2); }
+function fmtRatingDelta(v) {
+  if (v === null || v === undefined) return '--';
+  return (v >= 0 ? '+' : '') + Number(v).toFixed(2);
+}
+function ratingDeltaClass(v) {
+  if (v === null || v === undefined) return 'zero';
+  if (v > 0.005) return 'pos';
+  if (v < -0.005) return 'neg';
+  return 'zero';
+}
+function ratingBarsHtml(mine, comp) {
+  function row(label, val, color) {
+    var w = (val === null || val === undefined) ? 0 : Math.max(0, Math.min(100, val / 5 * 100));
+    return '<div class="bar-row"><span class="bar-label">' + label + '</span>' +
+      '<span class="bar-track"><span class="bar-fill" style="width:' + w.toFixed(1) + '%;background:' + color + ';"></span></span></div>';
+  }
+  return '<div class="rating-bars">' + row('我方', mine, '#818cf8') + row('竞卖', comp, '#fbbf24') + '</div>';
+}
+
+function renderRatingCompare() {
+  var body = document.getElementById('ratingCompareBody');
+  if (!body) return;
+  var summaryEl = document.getElementById('ratingSummaryBar');
+  var noteEl = document.getElementById('ratingNote');
+
+  var allDates = DATA.all_dates || DATA.dates || [];
+  if (!allDates.length) { body.innerHTML = '<div class="empty-state">暂无数据</div>'; return; }
+
+  var elDate = document.getElementById('ratingDatePick');
+  if (elDate && !elDate.options.length) initRatingDatePick();
+  var d = (elDate && elDate.value) ? elDate.value : allDates[allDates.length - 1];
+
+  var elMin = document.getElementById('ratingMinSample');
+  var minN = elMin ? Math.max(1, parseInt(elMin.value, 10) || 1) : 1;
+
+  var all = DATA.asins || [];
+  var dim = currentRatingDim || 'site';
+
+  /* ---- 分组 ---- */
+  var groups = [];
+  if (dim === 'site') {
+    var mx = all.filter(function(a) { return a.country === 'MX'; });
+    var br = all.filter(function(a) { return a.country === 'BR'; });
+    if (mx.length) groups.push({ label: '墨西哥站 MX', sub: '', items: mx });
+    if (br.length) groups.push({ label: '巴西站 BR', sub: '', items: br });
+    groups.push({ label: '两站合计', sub: '', items: all.slice(), isTotal: true });
+  } else if (dim === 'bu') {
+    var buMap = {};
+    all.forEach(function(a) {
+      var k = a.BU || '(未分配BU)';
+      if (!buMap[k]) buMap[k] = [];
+      buMap[k].push(a);
+    });
+    Object.keys(buMap).forEach(function(k) { groups.push({ label: k, sub: '', items: buMap[k] }); });
+  } else {
+    var catMap = {};
+    all.forEach(function(a) {
+      var k = (a.country || '?') + '\u0001' + (a.category || '(无分类)');
+      if (!catMap[k]) catMap[k] = [];
+      catMap[k].push(a);
+    });
+    Object.keys(catMap).forEach(function(k) {
+      var p = k.split('\u0001');
+      groups.push({ label: p[1], sub: p[0], items: catMap[k] });
+    });
+  }
+
+  /* ---- 计算 ---- */
+  var rows = groups.map(function(g) {
+    var r = calcRatingPair(g.items, d);
+    var delta = (r.mine.avg !== null && r.comp.avg !== null) ? (r.mine.avg - r.comp.avg) : null;
+    return { label: g.label, sub: g.sub, mine: r.mine, comp: r.comp, delta: delta, total: r.total, isTotal: !!g.isTotal };
+  });
+
+  if (dim !== 'site') {
+    rows = rows.filter(function(r) { return Math.max(r.mine.n, r.comp.n) >= minN; });
+    rows.sort(function(x, y) {
+      if (y.mine.n !== x.mine.n) return y.mine.n - x.mine.n;
+      return String(x.label).localeCompare(String(y.label), 'zh-Hans-CN');
+    });
+  }
+
+  /* ---- 顶部 KPI（全局口径，不随维度变化）---- */
+  if (summaryEl) {
+    var ov = calcRatingPair(all, d);
+    var ovDelta = (ov.mine.avg !== null && ov.comp.avg !== null) ? (ov.mine.avg - ov.comp.avg) : null;
+    var dcls = ratingDeltaClass(ovDelta);
+    summaryEl.innerHTML =
+      '<div class="rating-kpi-row">' +
+        '<div class="rating-kpi"><div class="rating-kpi-label">我方平均评分</div>' +
+          '<div class="rating-kpi-value mine">' + fmtRating(ov.mine.avg) + '</div>' +
+          '<div class="rating-kpi-sub">' + ov.mine.n + ' 个 ASIN 有评分 · ≥4.5 占 ' + (ov.mine.hi === null ? '--' : ov.mine.hi.toFixed(1) + '%') + '</div></div>' +
+        '<div class="rating-kpi"><div class="rating-kpi-label">竞卖平均评分</div>' +
+          '<div class="rating-kpi-value comp">' + fmtRating(ov.comp.avg) + '</div>' +
+          '<div class="rating-kpi-sub">' + ov.comp.n + ' 个 ASIN 有评分 · ≥4.5 占 ' + (ov.comp.hi === null ? '--' : ov.comp.hi.toFixed(1) + '%') + '</div></div>' +
+        '<div class="rating-kpi"><div class="rating-kpi-label">我方领先</div>' +
+          '<div class="rating-kpi-value ' + dcls + '">' + fmtRatingDelta(ovDelta) + '</div>' +
+          '<div class="rating-kpi-sub">截止 ' + d + ' 的当日快照</div></div>' +
+      '</div>';
+  }
+
+  /* ---- 表格 ---- */
+  if (!rows.length) {
+    body.innerHTML = '<div class="empty-state">当前维度/样本阈值下没有数据</div>';
+  } else {
+    var html = '<table class="rating-table"><thead><tr>' +
+      '<th style="width:22%;">维度</th>' +
+      '<th style="width:13%;">我方均分</th>' +
+      '<th style="width:13%;">竞卖均分</th>' +
+      '<th style="width:9%;">差值</th>' +
+      '<th style="width:22%;">评分对比（满分 5）</th>' +
+      '<th style="width:21%;">≥4.5 占比（我方 / 竞卖）</th>' +
+      '</tr></thead><tbody>';
+
+    rows.forEach(function(r) {
+      var subTag = r.sub ? '<span class="rating-dim-sub">' + safeText(r.sub === 'MX' ? 'MX' : (r.sub === 'BR' ? 'BR' : r.sub)) + '</span>' : '';
+      if (!subTag && r.mine.n === 0 && r.comp.n > 0) subTag = '<span class="rating-dim-sub">仅竞卖</span>';
+      if (!subTag && r.comp.n === 0 && r.mine.n > 0) subTag = '<span class="rating-dim-sub">仅我方</span>';
+      var hiCell = (r.mine.hi === null && r.comp.hi === null) ? '--'
+        : '<span class="rating-hi">' + (r.mine.hi === null ? '--' : r.mine.hi.toFixed(1) + '%') +
+          '<span class="sep">/</span>' + (r.comp.hi === null ? '--' : r.comp.hi.toFixed(1) + '%') + '</span>';
+      html += '<tr' + (r.isTotal ? ' class="rating-total"' : '') + '>' +
+        '<td><span class="rating-dim">' + safeText(r.label) + '</span>' + subTag + '</td>' +
+        '<td><span class="rating-val mine">' + fmtRating(r.mine.avg) + '</span><span class="rating-n">' + r.mine.n + ' 个</span></td>' +
+        '<td><span class="rating-val comp">' + fmtRating(r.comp.avg) + '</span><span class="rating-n">' + r.comp.n + ' 个</span></td>' +
+        '<td><span class="rating-delta ' + ratingDeltaClass(r.delta) + '">' + fmtRatingDelta(r.delta) + '</span></td>' +
+        '<td>' + ratingBarsHtml(r.mine.avg, r.comp.avg) + '</td>' +
+        '<td>' + hiCell + '</td>' +
+        '</tr>';
+    });
+    html += '</tbody></table>';
+    body.innerHTML = html;
+  }
+
+  /* ---- 口径说明 ---- */
+  if (noteEl) {
+    var dimName = dim === 'site' ? '站点整体' : (dim === 'bu' ? 'BU 维度' : '三级分类维度');
+    var scopeNote = dim === 'site' ? '站点维度不做样本过滤，始终显示全部三行' : ('仅显示「我方或竞卖任一方样本 ≥ ' + minN + '」的行，按我方样本数降序');
+    noteEl.innerHTML =
+      '当前维度：<b>' + dimName + '</b>　·　' + scopeNote + '<br>' +
+      '均分口径：按 ASIN <b>简单平均</b>（每个 ASIN 权重相同），<b>不是</b>按评论数加权 —— 抓取表不含评论数。<br>' +
+      '竞卖 = 非本品牌（' + 'FEANDREA / SONGMICS / VASAGLE / SONGMICS HOME' + ' 之外的品牌）。样本只统计当日<b>有评分</b>的 ASIN，评分缺失（新品/无评分）不计入。<br>' +
+      '「两站合计」把同一 ASIN 在 MX、BR 的记录各计一次，与两行分别相加一致。';
+  }
+}
+
 function renderAvgPrice() {
   const container = document.getElementById('avgPriceSection');
   if (!container) return;
@@ -12551,6 +12819,8 @@ initMarketFilters();
 initMarketDatePick();
 switchPriceView('all');
 renderAvgPrice();
+initRatingDatePick();
+renderRatingCompare();
 renderAlertModule();
 renderDiscountDistribution();
 initFilters();

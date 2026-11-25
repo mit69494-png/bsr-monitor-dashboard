@@ -163,6 +163,26 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helv
 .rating-hi { font-size: 12px; color: #475569; }
 .rating-hi .sep { color: #cbd5e1; margin: 0 4px; }
 
+/* 产品列表顶部的评分对比面板 */
+.rating-panel { margin-top: 14px; padding: 14px 16px 12px; border: 1px solid #e0e7ff; border-radius: 12px; background: linear-gradient(135deg, #fafbff, #f6f4ff); }
+.rating-panel-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+.rating-panel-title { font-size: 15px; font-weight: 800; color: #1e293b; }
+.rating-panel-sub { font-size: 12px; color: #94a3b8; margin-top: 3px; line-height: 1.6; }
+.rating-panel-ctrl { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #64748b; white-space: nowrap; }
+.rating-kpi-inline { display: flex; flex-wrap: wrap; gap: 10px; }
+.rating-kpi-inline .k { display: flex; align-items: baseline; gap: 5px; background: #fff; border: 1px solid #e8eef7; border-radius: 999px; padding: 5px 14px; }
+.rating-kpi-inline .k i { font-style: normal; font-size: 12px; color: #94a3b8; font-weight: 600; }
+.rating-kpi-inline .k b { font-size: 16px; font-weight: 800; color: #334155; }
+.rating-kpi-inline .k b.mine { color: #4f46e5; }
+.rating-kpi-inline .k b.comp { color: #d97706; }
+.rating-kpi-inline .k b.pos { color: #16a34a; }
+.rating-kpi-inline .k b.neg { color: #dc2626; }
+.rating-kpi-inline .k em { font-style: normal; font-size: 11px; color: #b0b8c4; }
+.rating-table-split th.site-h.mx { background: #e0e7ff; color: #3730a3; border-left: 1px solid #dbe3f0; }
+.rating-table-split th.site-h.br { background: #dcfce7; color: #166534; border-left: 1px solid #dbe3f0; }
+.rating-table-split td:nth-child(5), .rating-table-split th:nth-child(5) { border-left: 1px solid #e5eaf3; }
+.rating-table-split th:first-child { background: #f1f5f9; color: #475569; }
+
 /* ASIN detail table */
 .detail-table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .detail-table th { background: #f5f6fa; padding: 10px 12px; text-align: left; font-weight: 600; color: #555; border-bottom: 2px solid #eee; }
@@ -475,7 +495,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helv
     <button class="module-tab active" onclick="switchModule('position')" data-page-node-id="mZLkKvRkwSqnCP0KkLCZPo">📊 BSR监控</button>
     <button class="module-tab" onclick="switchModule('price')" data-page-node-id="82bquXbXcMKSsIdMWSFseD">💰 价格变动</button>
     <button class="module-tab" onclick="switchModule('market')" data-page-node-id="E2jPpAoZcxbDLIERF6CBOx">📈 均价&amp;价差</button>
-    <button class="module-tab" onclick="switchModule('rating')" data-page-node-id="rateTabBtn01">⭐ 评分对比</button>
     <button class="module-tab" onclick="switchModule('activity')" data-page-node-id="6O5PFj9nCrW0uFbFkFJjA5">🎯 活动分析</button>
     <button class="module-tab" onclick="switchModule('products')" data-page-node-id="lKfaEDdPhGnRUTB8ewqCkq">📦 产品列表</button>
   </div>
@@ -867,41 +886,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helv
     </div>
   </div>
 
-  <!-- ========== MODULE 3.5: 评分对比 ========== -->
-  <div id="module-rating" class="module">
-    <div class="card">
-      <div class="card-header">
-        <div>
-          <div class="card-title">⭐ 评分对比（我方 vs 竞卖）</div>
-          <div class="card-subtitle">按「站点整体 / BU / 三级分类」查看双方平均评分、差距与高分占比</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:#666;">
-          <span>截止日期</span>
-          <select class="filter-select" id="ratingDatePick" onchange="renderRatingCompare()" style="min-width:110px;"></select>
-        </div>
-      </div>
-
-      <div class="view-tabs" id="ratingDimTabs" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-        <button class="view-tab active" onclick="switchRatingDim('site', this)">🌍 站点整体</button>
-        <button class="view-tab" onclick="switchRatingDim('bu', this)">📦 BU 维度</button>
-        <button class="view-tab" onclick="switchRatingDim('cat', this)">🏷️ 三级分类维度</button>
-        <div style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;color:#666;">
-          <span>最小样本</span>
-          <select class="filter-select" id="ratingMinSample" onchange="renderRatingCompare()" style="min-width:80px;">
-            <option value="1">≥1</option>
-            <option value="3" selected>≥3</option>
-            <option value="5">≥5</option>
-            <option value="10">≥10</option>
-          </select>
-        </div>
-      </div>
-
-      <div id="ratingSummaryBar" style="margin-top:12px;"></div>
-      <div id="ratingCompareBody" style="margin-top:12px;"></div>
-      <div id="ratingNote" style="margin-top:10px;font-size:12px;color:#94a3b8;line-height:1.7;"></div>
-    </div>
-  </div>
-
   <!-- ========== MODULE 4: 活动分析 ========== -->
   <div id="module-activity" class="module" data-page-node-id="xt4jV0JX6PQRommLvSE6lM">
     <div class="activity-highlight-panel" data-page-node-id="tqmg4RV7XoMPJ1yRSyGh16">
@@ -1072,6 +1056,35 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helv
           <div class="card-title" data-page-node-id="ksbYKktbgiCald6TwTFMMh">产品列表</div>
           <div class="card-subtitle" data-page-node-id="9CJ6qUCu6SKuz0Qy33uHBL">所有ASIN综合信息</div>
         </div>
+      </div>
+
+      <!-- ===== 评分对比（我方 vs 竞卖），置于产品列表顶部 ===== -->
+      <div class="rating-panel">
+        <div class="rating-panel-head">
+          <div>
+            <div class="rating-panel-title">⭐ 评分对比（我方 vs 竞卖）</div>
+            <div class="rating-panel-sub">全量数据，不受下方筛选影响；每个维度均按 墨西哥 MX / 巴西 BR 分列对比</div>
+          </div>
+          <div class="rating-panel-ctrl">
+            <span>截止日期</span>
+            <select class="filter-select" id="ratingDatePick" onchange="renderRatingCompare()" style="min-width:94px;"></select>
+            <span style="margin-left:8px;">最小样本</span>
+            <select class="filter-select" id="ratingMinSample" onchange="renderRatingCompare()" style="min-width:70px;">
+              <option value="1">≥1</option>
+              <option value="3" selected>≥3</option>
+              <option value="5">≥5</option>
+              <option value="10">≥10</option>
+            </select>
+          </div>
+        </div>
+        <div class="view-tabs" id="ratingDimTabs" style="margin-top:10px;">
+          <button class="view-tab active" onclick="switchRatingDim('site', this)">🌍 站点整体</button>
+          <button class="view-tab" onclick="switchRatingDim('bu', this)">📦 BU 维度</button>
+          <button class="view-tab" onclick="switchRatingDim('cat', this)">🏷️ 三级分类维度</button>
+        </div>
+        <div id="ratingSummaryBar" style="margin-top:10px;"></div>
+        <div id="ratingCompareBody" style="margin-top:10px;"></div>
+        <div id="ratingNote" style="margin-top:8px;"></div>
       </div>
 
       <div class="filters" data-page-node-id="Wf6cULCgGDKYyuRxNg4rHp">
@@ -4261,10 +4274,10 @@ function switchModule(name, options) {
     _asinJumpReturnState = null;
   } else {
     if (name === 'market') renderAvgPrice();
-    if (name === 'rating') { initRatingDatePick(); renderRatingCompare(); }
     if (name === 'activity') { renderActivityAnalysis(); renderActivityHighlightSummary(); renderDiscountDistribution(); renderNearLowestPriceWarning(); }
   }
   if (name === 'products' && !options.skipProductRefresh) cascadingFilter();
+  if (name === 'products') { initRatingDatePick(); renderRatingCompare(); }
   // 价格模块显示时，按真实容器宽度重绘趋势图
   if (name === 'price') {
     setTimeout(() => { drawPriceTrend(currentPriceView || 'all'); }, 50);
@@ -9980,7 +9993,7 @@ function renderPriceAlertFullListTable() {
   body.innerHTML = rows;
 }
 
-/* ================= 评分对比模块（我方 vs 竞卖） ================= */
+/* ================= 评分对比（产品列表顶部，MX/BR 分列） ================= */
 var currentRatingDim = 'site';
 
 function switchRatingDim(dim, btn) {
@@ -10019,14 +10032,16 @@ function summarizeRatings(list) {
   return { avg: s / list.length, n: list.length, hi: hi / list.length * 100 };
 }
 
-function calcRatingPair(items, d) {
+/* 某分组在指定站点的我方/竞卖评分 */
+function ratingStatBySite(items, country, d) {
   var mine = [], comp = [];
   (items || []).forEach(function(a) {
+    if (country && a.country !== country) return;
     var r = getRatingAt(a, d);
     if (r === null) return;
     if (isOwnBrandAsin(a)) mine.push(r); else comp.push(r);
   });
-  return { mine: summarizeRatings(mine), comp: summarizeRatings(comp), total: (items || []).length };
+  return { mine: summarizeRatings(mine), comp: summarizeRatings(comp) };
 }
 
 function fmtRating(v) { return (v === null || v === undefined) ? '--' : Number(v).toFixed(2); }
@@ -10040,13 +10055,23 @@ function ratingDeltaClass(v) {
   if (v < -0.005) return 'neg';
   return 'zero';
 }
-function ratingBarsHtml(mine, comp) {
-  function row(label, val, color) {
-    var w = (val === null || val === undefined) ? 0 : Math.max(0, Math.min(100, val / 5 * 100));
-    return '<div class="bar-row"><span class="bar-label">' + label + '</span>' +
-      '<span class="bar-track"><span class="bar-fill" style="width:' + w.toFixed(1) + '%;background:' + color + ';"></span></span></div>';
+
+function ratingSplitCell(stat, kind) {
+  var v = stat.avg;
+  var cls = kind === 'mine' ? 'mine' : 'comp';
+  if (v === null) {
+    return '<td><span style="color:#cbd5e1;font-weight:700;">--</span><span class="rating-n">0 个</span></td>';
   }
-  return '<div class="rating-bars">' + row('我方', mine, '#818cf8') + row('竞卖', comp, '#fbbf24') + '</div>';
+  return '<td><span class="rating-val ' + cls + '">' + v.toFixed(2) + '</span>' +
+         '<span class="rating-n">' + stat.n + ' 个</span></td>';
+}
+
+function ratingDeltaCell(mine, comp) {
+  if (mine.avg === null || comp.avg === null) {
+    return '<td><span class="rating-delta zero">--</span></td>';
+  }
+  var dv = mine.avg - comp.avg;
+  return '<td><span class="rating-delta ' + ratingDeltaClass(dv) + '">' + fmtRatingDelta(dv) + '</span></td>';
 }
 
 function renderRatingCompare() {
@@ -10068,14 +10093,10 @@ function renderRatingCompare() {
   var all = DATA.asins || [];
   var dim = currentRatingDim || 'site';
 
-  /* ---- 分组 ---- */
+  /* ---- 分组（行）---- */
   var groups = [];
   if (dim === 'site') {
-    var mx = all.filter(function(a) { return a.country === 'MX'; });
-    var br = all.filter(function(a) { return a.country === 'BR'; });
-    if (mx.length) groups.push({ label: '墨西哥站 MX', sub: '', items: mx });
-    if (br.length) groups.push({ label: '巴西站 BR', sub: '', items: br });
-    groups.push({ label: '两站合计', sub: '', items: all.slice(), isTotal: true });
+    groups.push({ label: '全部产品', items: all });
   } else if (dim === 'bu') {
     var buMap = {};
     all.forEach(function(a) {
@@ -10083,51 +10104,55 @@ function renderRatingCompare() {
       if (!buMap[k]) buMap[k] = [];
       buMap[k].push(a);
     });
-    Object.keys(buMap).forEach(function(k) { groups.push({ label: k, sub: '', items: buMap[k] }); });
+    Object.keys(buMap).forEach(function(k) { groups.push({ label: k, items: buMap[k] }); });
   } else {
     var catMap = {};
     all.forEach(function(a) {
-      var k = (a.country || '?') + '\u0001' + (a.category || '(无分类)');
+      var k = a.category || '(无分类)';
       if (!catMap[k]) catMap[k] = [];
       catMap[k].push(a);
     });
-    Object.keys(catMap).forEach(function(k) {
-      var p = k.split('\u0001');
-      groups.push({ label: p[1], sub: p[0], items: catMap[k] });
-    });
+    Object.keys(catMap).forEach(function(k) { groups.push({ label: k, items: catMap[k] }); });
   }
 
   /* ---- 计算 ---- */
   var rows = groups.map(function(g) {
-    var r = calcRatingPair(g.items, d);
-    var delta = (r.mine.avg !== null && r.comp.avg !== null) ? (r.mine.avg - r.comp.avg) : null;
-    return { label: g.label, sub: g.sub, mine: r.mine, comp: r.comp, delta: delta, total: r.total, isTotal: !!g.isTotal };
+    var mx = ratingStatBySite(g.items, 'MX', d);
+    var br = ratingStatBySite(g.items, 'BR', d);
+    return {
+      label: g.label, mx: mx, br: br,
+      mineTotal: mx.mine.n + br.mine.n,
+      maxMine: Math.max(mx.mine.n, br.mine.n),
+      maxComp: Math.max(mx.comp.n, br.comp.n)
+    };
   });
 
   if (dim !== 'site') {
-    rows = rows.filter(function(r) { return Math.max(r.mine.n, r.comp.n) >= minN; });
+    rows = rows.filter(function(r) { return r.maxMine >= minN || r.maxComp >= minN; });
     rows.sort(function(x, y) {
-      if (y.mine.n !== x.mine.n) return y.mine.n - x.mine.n;
+      if (y.mineTotal !== x.mineTotal) return y.mineTotal - x.mineTotal;
       return String(x.label).localeCompare(String(y.label), 'zh-Hans-CN');
     });
   }
 
-  /* ---- 顶部 KPI（全局口径，不随维度变化）---- */
+  /* ---- 顶部紧凑 KPI（全站口径）---- */
   if (summaryEl) {
-    var ov = calcRatingPair(all, d);
-    var ovDelta = (ov.mine.avg !== null && ov.comp.avg !== null) ? (ov.mine.avg - ov.comp.avg) : null;
-    var dcls = ratingDeltaClass(ovDelta);
+    var mineVals = [], compVals = [];
+    all.forEach(function(a) {
+      var r = getRatingAt(a, d);
+      if (r === null) return;
+      if (isOwnBrandAsin(a)) mineVals.push(r); else compVals.push(r);
+    });
+    var mineAvg = summarizeRatings(mineVals);
+    var compAvg = summarizeRatings(compVals);
+    var dlt = (mineAvg.avg !== null && compAvg.avg !== null) ? (mineAvg.avg - compAvg.avg) : null;
     summaryEl.innerHTML =
-      '<div class="rating-kpi-row">' +
-        '<div class="rating-kpi"><div class="rating-kpi-label">我方平均评分</div>' +
-          '<div class="rating-kpi-value mine">' + fmtRating(ov.mine.avg) + '</div>' +
-          '<div class="rating-kpi-sub">' + ov.mine.n + ' 个 ASIN 有评分 · ≥4.5 占 ' + (ov.mine.hi === null ? '--' : ov.mine.hi.toFixed(1) + '%') + '</div></div>' +
-        '<div class="rating-kpi"><div class="rating-kpi-label">竞卖平均评分</div>' +
-          '<div class="rating-kpi-value comp">' + fmtRating(ov.comp.avg) + '</div>' +
-          '<div class="rating-kpi-sub">' + ov.comp.n + ' 个 ASIN 有评分 · ≥4.5 占 ' + (ov.comp.hi === null ? '--' : ov.comp.hi.toFixed(1) + '%') + '</div></div>' +
-        '<div class="rating-kpi"><div class="rating-kpi-label">我方领先</div>' +
-          '<div class="rating-kpi-value ' + dcls + '">' + fmtRatingDelta(ovDelta) + '</div>' +
-          '<div class="rating-kpi-sub">截止 ' + d + ' 的当日快照</div></div>' +
+      '<div class="rating-kpi-inline">' +
+        '<span class="k"><i>我方均分</i><b class="mine">' + fmtRating(mineAvg.avg) + '</b><em>' + mineAvg.n + ' 个</em></span>' +
+        '<span class="k"><i>竞卖均分</i><b class="comp">' + fmtRating(compAvg.avg) + '</b><em>' + compAvg.n + ' 个</em></span>' +
+        '<span class="k"><i>我方领先</i><b class="' + ratingDeltaClass(dlt) + '">' + fmtRatingDelta(dlt) + '</b></span>' +
+        '<span class="k"><i>≥4.5 占比</i><b>' + (mineAvg.hi === null ? '--' : mineAvg.hi.toFixed(1) + '%') + '</b><em>vs ' + (compAvg.hi === null ? '--' : compAvg.hi.toFixed(1) + '%') + '</em></span>' +
+        '<span class="k k-date"><i>截止</i><b style="font-size:13px;">' + d + '</b></span>' +
       '</div>';
   }
 
@@ -10135,29 +10160,24 @@ function renderRatingCompare() {
   if (!rows.length) {
     body.innerHTML = '<div class="empty-state">当前维度/样本阈值下没有数据</div>';
   } else {
-    var html = '<table class="rating-table"><thead><tr>' +
-      '<th style="width:22%;">维度</th>' +
-      '<th style="width:13%;">我方均分</th>' +
-      '<th style="width:13%;">竞卖均分</th>' +
-      '<th style="width:9%;">差值</th>' +
-      '<th style="width:22%;">评分对比（满分 5）</th>' +
-      '<th style="width:21%;">≥4.5 占比（我方 / 竞卖）</th>' +
+    var html = '<table class="rating-table rating-table-split"><thead>' +
+      '<tr>' +
+        '<th rowspan="2" style="width:20%;">维度</th>' +
+        '<th colspan="3" class="site-h mx">墨西哥 MX</th>' +
+        '<th colspan="3" class="site-h br">巴西 BR</th>' +
+      '</tr>' +
+      '<tr>' +
+        '<th>我方</th><th>竞卖</th><th>差值</th>' +
+        '<th>我方</th><th>竞卖</th><th>差值</th>' +
       '</tr></thead><tbody>';
 
     rows.forEach(function(r) {
-      var subTag = r.sub ? '<span class="rating-dim-sub">' + safeText(r.sub === 'MX' ? 'MX' : (r.sub === 'BR' ? 'BR' : r.sub)) + '</span>' : '';
-      if (!subTag && r.mine.n === 0 && r.comp.n > 0) subTag = '<span class="rating-dim-sub">仅竞卖</span>';
-      if (!subTag && r.comp.n === 0 && r.mine.n > 0) subTag = '<span class="rating-dim-sub">仅我方</span>';
-      var hiCell = (r.mine.hi === null && r.comp.hi === null) ? '--'
-        : '<span class="rating-hi">' + (r.mine.hi === null ? '--' : r.mine.hi.toFixed(1) + '%') +
-          '<span class="sep">/</span>' + (r.comp.hi === null ? '--' : r.comp.hi.toFixed(1) + '%') + '</span>';
-      html += '<tr' + (r.isTotal ? ' class="rating-total"' : '') + '>' +
-        '<td><span class="rating-dim">' + safeText(r.label) + '</span>' + subTag + '</td>' +
-        '<td><span class="rating-val mine">' + fmtRating(r.mine.avg) + '</span><span class="rating-n">' + r.mine.n + ' 个</span></td>' +
-        '<td><span class="rating-val comp">' + fmtRating(r.comp.avg) + '</span><span class="rating-n">' + r.comp.n + ' 个</span></td>' +
-        '<td><span class="rating-delta ' + ratingDeltaClass(r.delta) + '">' + fmtRatingDelta(r.delta) + '</span></td>' +
-        '<td>' + ratingBarsHtml(r.mine.avg, r.comp.avg) + '</td>' +
-        '<td>' + hiCell + '</td>' +
+      var tag = '';
+      if (r.maxMine === 0 && r.maxComp > 0) tag = '<span class="rating-dim-sub">仅竞卖</span>';
+      html += '<tr>' +
+        '<td><span class="rating-dim">' + safeText(r.label) + '</span>' + tag + '</td>' +
+        ratingSplitCell(r.mx.mine, 'mine') + ratingSplitCell(r.mx.comp, 'comp') + ratingDeltaCell(r.mx.mine, r.mx.comp) +
+        ratingSplitCell(r.br.mine, 'mine') + ratingSplitCell(r.br.comp, 'comp') + ratingDeltaCell(r.br.mine, r.br.comp) +
         '</tr>';
     });
     html += '</tbody></table>';
@@ -10167,12 +10187,14 @@ function renderRatingCompare() {
   /* ---- 口径说明 ---- */
   if (noteEl) {
     var dimName = dim === 'site' ? '站点整体' : (dim === 'bu' ? 'BU 维度' : '三级分类维度');
-    var scopeNote = dim === 'site' ? '站点维度不做样本过滤，始终显示全部三行' : ('仅显示「我方或竞卖任一方样本 ≥ ' + minN + '」的行，按我方样本数降序');
+    var scopeNote = dim === 'site'
+      ? '站点整体只有一行（全部产品），MX / BR 分列对比'
+      : ('仅显示「某站我方或竞卖样本 ≥ ' + minN + '」的行，按我方样本合计降序');
     noteEl.innerHTML =
-      '当前维度：<b>' + dimName + '</b>　·　' + scopeNote + '<br>' +
-      '均分口径：按 ASIN <b>简单平均</b>（每个 ASIN 权重相同），<b>不是</b>按评论数加权 —— 抓取表不含评论数。<br>' +
-      '竞卖 = 非本品牌（' + 'FEANDREA / SONGMICS / VASAGLE / SONGMICS HOME' + ' 之外的品牌）。样本只统计当日<b>有评分</b>的 ASIN，评分缺失（新品/无评分）不计入。<br>' +
-      '「两站合计」把同一 ASIN 在 MX、BR 的记录各计一次，与两行分别相加一致。';
+      '<span style="margin-right:12px;">当前：<b>' + dimName + '</b>　' + scopeNote + '</span>' +
+      '<span style="margin-right:12px;">均分 = 按 ASIN <b>简单平均</b>（非评论数加权）</span>' +
+      '<span style="margin-right:12px;">竞卖 = 非本品牌</span>' +
+      '<span>仅统计当日有评分的 ASIN</span>';
   }
 }
 

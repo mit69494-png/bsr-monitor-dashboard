@@ -182,6 +182,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helv
 .rating-table-split th.site-h.br { background: #dcfce7; color: #166534; border-left: 1px solid #dbe3f0; }
 .rating-table-split td:nth-child(5), .rating-table-split th:nth-child(5) { border-left: 1px solid #e5eaf3; }
 .rating-table-split th:first-child { background: #f1f5f9; color: #475569; }
+.rating-filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #dbe3f0; }
+.rating-filter-reset { font-size: 12px; color: #4f46e5; font-weight: 700; cursor: pointer; padding: 4px 9px; border-radius: 6px; user-select: none; }
+.rating-filter-reset:hover { background: #eef2ff; }
+.rating-block-title { font-size: 13px; font-weight: 800; color: #334155; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.rating-block-count { font-size: 11px; font-weight: 600; color: #94a3b8; }
+.rating-more { text-align: center; padding: 8px; font-size: 12px; color: #4f46e5; font-weight: 700; cursor: pointer; border: 1px dashed #c7d2fe; border-radius: 8px; margin-top: 8px; background: #f8faff; }
+.rating-more:hover { background: #eef2ff; }
 
 /* ASIN detail table */
 .detail-table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -1063,28 +1070,37 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helv
         <div class="rating-panel-head">
           <div>
             <div class="rating-panel-title">⭐ 评分对比（我方 vs 竞卖）</div>
-            <div class="rating-panel-sub">全量数据，不受下方筛选影响；每个维度均按 墨西哥 MX / 巴西 BR 分列对比</div>
+            <div class="rating-panel-sub">选好筛选条件即出结果；站点 / BU / 三级分类三个维度同时展示</div>
           </div>
           <div class="rating-panel-ctrl">
             <span>截止日期</span>
-            <select class="filter-select" id="ratingDatePick" onchange="renderRatingCompare()" style="min-width:94px;"></select>
-            <span style="margin-left:8px;">最小样本</span>
-            <select class="filter-select" id="ratingMinSample" onchange="renderRatingCompare()" style="min-width:70px;">
-              <option value="1">≥1</option>
-              <option value="3" selected>≥3</option>
-              <option value="5">≥5</option>
-              <option value="10">≥10</option>
-            </select>
+            <select class="filter-select" id="ratingDatePick" onchange="renderRatingCompare()" style="min-width:88px;"></select>
           </div>
         </div>
-        <div class="view-tabs" id="ratingDimTabs" style="margin-top:10px;">
-          <button class="view-tab active" onclick="switchRatingDim('site', this)">🌍 站点整体</button>
-          <button class="view-tab" onclick="switchRatingDim('bu', this)">📦 BU 维度</button>
-          <button class="view-tab" onclick="switchRatingDim('cat', this)">🏷️ 三级分类维度</button>
+
+        <div class="rating-filters">
+          <select class="filter-select" id="ratingFilterBU" onchange="onRatingFilterChange('bu')"><option value="">全部BU</option></select>
+          <select class="filter-select" id="ratingFilterCategory" onchange="onRatingFilterChange('cat')"><option value="">全部三级分类</option></select>
+          <select class="filter-select" id="ratingFilterManager" onchange="onRatingFilterChange('mgr')"><option value="">全部负责人</option></select>
+          <select class="filter-select" id="ratingFilterSite" onchange="renderRatingCompare()">
+            <option value="">全部站点</option>
+            <option value="MX">墨西哥 MX</option>
+            <option value="BR">巴西 BR</option>
+          </select>
+          <select class="filter-select" id="ratingMinSample" onchange="renderRatingCompare()">
+            <option value="1">最小样本 ≥1</option>
+            <option value="3" selected>最小样本 ≥3</option>
+            <option value="5">最小样本 ≥5</option>
+            <option value="10">最小样本 ≥10</option>
+          </select>
+          <span class="rating-filter-reset" onclick="resetRatingFilters()">↺ 重置</span>
         </div>
+
         <div id="ratingSummaryBar" style="margin-top:10px;"></div>
-        <div id="ratingCompareBody" style="margin-top:10px;"></div>
-        <div id="ratingNote" style="margin-top:8px;"></div>
+        <div id="ratingSiteBlock" style="margin-top:14px;"></div>
+        <div id="ratingBUBlock" style="margin-top:16px;"></div>
+        <div id="ratingCatBlock" style="margin-top:16px;"></div>
+        <div id="ratingNote" style="margin-top:10px;"></div>
       </div>
 
       <div class="filters" data-page-node-id="Wf6cULCgGDKYyuRxNg4rHp">
@@ -9993,14 +10009,92 @@ function renderPriceAlertFullListTable() {
   body.innerHTML = rows;
 }
 
-/* ================= 评分对比（产品列表顶部，MX/BR 分列） ================= */
-var currentRatingDim = 'site';
+/* ================= 评分对比（产品列表顶部 · 手动筛选） ================= */
+var _ratingCatExpanded = false;
 
-function switchRatingDim(dim, btn) {
-  currentRatingDim = dim;
-  var tabs = document.querySelectorAll('#ratingDimTabs .view-tab');
-  tabs.forEach(function(t) { t.classList.remove('active'); });
-  if (btn) btn.classList.add('active');
+function rsel(id) { var el = document.getElementById(id); return el ? el.value : ''; }
+function _ratingSortCn(arr) {
+  return arr.sort(function(x, y) { return String(x).localeCompare(String(y), 'zh-Hans-CN'); });
+}
+
+function getRatingFilteredAsins() {
+  var all = DATA.asins || [];
+  var bu = rsel('ratingFilterBU');
+  var cat = rsel('ratingFilterCategory');
+  var mgr = rsel('ratingFilterManager');
+  var site = rsel('ratingFilterSite');
+  return all.filter(function(a) {
+    if (bu && (a.BU || '(未分配BU)') !== bu) return false;
+    if (cat && (a.category || '(无分类)') !== cat) return false;
+    if (mgr && (a.manager || '(未分配)') !== mgr) return false;
+    if (site && a.country !== site) return false;
+    return true;
+  });
+}
+
+function buildRatingFilterOptions() {
+  var all = DATA.asins || [];
+  var elBU = document.getElementById('ratingFilterBU');
+  var elCat = document.getElementById('ratingFilterCategory');
+  var elMgr = document.getElementById('ratingFilterManager');
+  if (!elBU || !elCat || !elMgr) return;
+
+  var bus = [], mgrs = [], seenB = {}, seenM = {};
+  all.forEach(function(a) {
+    var b = a.BU || '(未分配BU)';
+    var m = a.manager || '';
+    if (!seenB[b]) { seenB[b] = 1; bus.push(b); }
+    if (m && !seenM[m]) { seenM[m] = 1; mgrs.push(m); }
+  });
+  _ratingSortCn(bus); _ratingSortCn(mgrs);
+
+  elBU.innerHTML = '<option value="">全部BU</option>' + bus.map(function(v) {
+    return '<option value="' + safeText(v) + '">' + safeText(v) + '</option>';
+  }).join('');
+  elMgr.innerHTML = '<option value="">全部负责人</option>' + mgrs.map(function(v) {
+    return '<option value="' + safeText(v) + '">' + safeText(v) + '</option>';
+  }).join('');
+  refreshRatingCategoryOptions('');
+}
+
+function refreshRatingCategoryOptions(keep) {
+  var all = DATA.asins || [];
+  var elBU = document.getElementById('ratingFilterBU');
+  var elCat = document.getElementById('ratingFilterCategory');
+  if (!elCat) return;
+  var bu = elBU ? elBU.value : '';
+  var cats = [], seen = {};
+  all.forEach(function(a) {
+    if (bu && (a.BU || '(未分配BU)') !== bu) return;
+    var c = a.category || '(无分类)';
+    if (!seen[c]) { seen[c] = 1; cats.push(c); }
+  });
+  _ratingSortCn(cats);
+  elCat.innerHTML = '<option value="">全部三级分类</option>' + cats.map(function(v) {
+    return '<option value="' + safeText(v) + '">' + safeText(v) + '</option>';
+  }).join('');
+  if (keep && cats.indexOf(keep) >= 0) elCat.value = keep;
+}
+
+function onRatingFilterChange(which) {
+  if (which === 'bu') refreshRatingCategoryOptions('');
+  renderRatingCompare();
+}
+
+function resetRatingFilters() {
+  ['ratingFilterBU', 'ratingFilterCategory', 'ratingFilterManager', 'ratingFilterSite'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  var elMin = document.getElementById('ratingMinSample');
+  if (elMin) elMin.value = '3';
+  refreshRatingCategoryOptions('');
+  _ratingCatExpanded = false;
+  renderRatingCompare();
+}
+
+function toggleRatingCatExpand() {
+  _ratingCatExpanded = !_ratingCatExpanded;
   renderRatingCompare();
 }
 
@@ -10032,7 +10126,6 @@ function summarizeRatings(list) {
   return { avg: s / list.length, n: list.length, hi: hi / list.length * 100 };
 }
 
-/* 某分组在指定站点的我方/竞卖评分 */
 function ratingStatBySite(items, country, d) {
   var mine = [], comp = [];
   (items || []).forEach(function(a) {
@@ -10074,71 +10167,124 @@ function ratingDeltaCell(mine, comp) {
   return '<td><span class="rating-delta ' + ratingDeltaClass(dv) + '">' + fmtRatingDelta(dv) + '</span></td>';
 }
 
+function ratingHiCell(mine, comp) {
+  if (mine.hi === null && comp.hi === null) return '--';
+  return '<span class="rating-hi">' + (mine.hi === null ? '--' : mine.hi.toFixed(1) + '%') +
+         '<span class="sep">/</span>' + (comp.hi === null ? '--' : comp.hi.toFixed(1) + '%') + '</span>';
+}
+
+/* 站点维度表（行=站点） */
+function renderRatingSiteBlock(items, d, siteFilter) {
+  var el = document.getElementById('ratingSiteBlock');
+  if (!el) return;
+  var sites = siteFilter ? [siteFilter] : ['MX', 'BR'];
+  var rows = sites.map(function(site) {
+    var st = ratingStatBySite(items, site, d);
+    return { label: site === 'MX' ? '墨西哥 MX' : '巴西 BR', mine: st.mine, comp: st.comp, isTotal: false };
+  });
+  var totalSt = ratingStatBySite(items, siteFilter || null, d);
+  rows.push({ label: siteFilter ? '合计' : '两站合计', mine: totalSt.mine, comp: totalSt.comp, isTotal: true });
+
+  var html = '<div class="rating-block-title">站点维度</div>' +
+    '<table class="rating-table"><thead><tr>' +
+    '<th style="width:20%;">站点</th><th style="width:16%;">我方均分</th><th style="width:16%;">竞卖均分</th>' +
+    '<th style="width:12%;">差值</th><th>≥4.5 占比（我方 / 竞卖）</th>' +
+    '</tr></thead><tbody>';
+  rows.forEach(function(r) {
+    var dv = (r.mine.avg !== null && r.comp.avg !== null) ? (r.mine.avg - r.comp.avg) : null;
+    html += '<tr' + (r.isTotal ? ' class="rating-total"' : '') + '>' +
+      '<td><span class="rating-dim">' + safeText(r.label) + '</span></td>' +
+      ratingSplitCell(r.mine, 'mine') +
+      ratingSplitCell(r.comp, 'comp') +
+      '<td><span class="rating-delta ' + ratingDeltaClass(dv) + '">' + fmtRatingDelta(dv) + '</span></td>' +
+      '<td>' + ratingHiCell(r.mine, r.comp) + '</td>' +
+      '</tr>';
+  });
+  html += '</tbody></table>';
+  el.innerHTML = html;
+}
+
+/* BU / 三级分类表（行=维度，列按站点分） */
+function renderRatingSplitBlock(containerId, title, groups, d, minN, siteFilter, limit) {
+  var el = document.getElementById(containerId);
+  if (!el) return;
+  var showMX = !siteFilter || siteFilter === 'MX';
+  var showBR = !siteFilter || siteFilter === 'BR';
+
+  var rows = groups.map(function(g) {
+    var mx = ratingStatBySite(g.items, 'MX', d);
+    var br = ratingStatBySite(g.items, 'BR', d);
+    return {
+      label: g.label, mx: mx, br: br,
+      maxMine: Math.max(mx.mine.n, br.mine.n),
+      maxComp: Math.max(mx.comp.n, br.comp.n),
+      mineTotal: (showMX ? mx.mine.n : 0) + (showBR ? br.mine.n : 0)
+    };
+  });
+  rows = rows.filter(function(r) { return r.maxMine >= minN || r.maxComp >= minN; });
+  rows.sort(function(x, y) {
+    if (y.mineTotal !== x.mineTotal) return y.mineTotal - x.mineTotal;
+    return String(x.label).localeCompare(String(y.label), 'zh-Hans-CN');
+  });
+
+  var total = rows.length;
+  var shown = (limit && !_ratingCatExpanded && total > limit) ? rows.slice(0, limit) : rows;
+
+  var head = '<thead><tr><th rowspan="2" style="width:20%;">' + title + '</th>';
+  if (showMX) head += '<th colspan="3" class="site-h mx">墨西哥 MX</th>';
+  if (showBR) head += '<th colspan="3" class="site-h br">巴西 BR</th>';
+  head += '</tr><tr>';
+  if (showMX) head += '<th>我方</th><th>竞卖</th><th>差值</th>';
+  if (showBR) head += '<th>我方</th><th>竞卖</th><th>差值</th>';
+  head += '</tr></thead>';
+
+  var body = '';
+  if (!shown.length) {
+    body = '<tr><td colspan="' + (1 + (showMX ? 3 : 0) + (showBR ? 3 : 0)) + '"><div class="empty-state">当前筛选下没有符合条件的行</div></td></tr>';
+  } else {
+    shown.forEach(function(r) {
+      body += '<tr><td><span class="rating-dim">' + safeText(r.label) + '</span>' +
+        (r.maxMine === 0 && r.maxComp > 0 ? '<span class="rating-dim-sub">仅竞卖</span>' : '') + '</td>';
+      if (showMX) body += ratingSplitCell(r.mx.mine, 'mine') + ratingSplitCell(r.mx.comp, 'comp') + ratingDeltaCell(r.mx.mine, r.mx.comp);
+      if (showBR) body += ratingSplitCell(r.br.mine, 'mine') + ratingSplitCell(r.br.comp, 'comp') + ratingDeltaCell(r.br.mine, r.br.comp);
+      body += '</tr>';
+    });
+  }
+
+  var more = '';
+  if (limit && total > limit) {
+    more = '<div class="rating-more" onclick="toggleRatingCatExpand()">' +
+      (_ratingCatExpanded ? '收起（仅显示前 ' + limit + ' 行）' : '展开全部（共 ' + total + ' 行）') + '</div>';
+  }
+
+  el.innerHTML = '<div class="rating-block-title">' + title + '维度' +
+    (total > shown.length ? '<span class="rating-block-count">显示前 ' + shown.length + ' / ' + total + '</span>' : '') +
+    '</div><table class="rating-table rating-table-split">' + head + '<tbody>' + body + '</tbody></table>' + more;
+}
+
 function renderRatingCompare() {
-  var body = document.getElementById('ratingCompareBody');
-  if (!body) return;
-  var summaryEl = document.getElementById('ratingSummaryBar');
-  var noteEl = document.getElementById('ratingNote');
+  var elBU = document.getElementById('ratingFilterBU');
+  if (!elBU) return;
+  if (elBU.options.length <= 1) buildRatingFilterOptions();
 
   var allDates = DATA.all_dates || DATA.dates || [];
-  if (!allDates.length) { body.innerHTML = '<div class="empty-state">暂无数据</div>'; return; }
-
+  if (!allDates.length) return;
   var elDate = document.getElementById('ratingDatePick');
   if (elDate && !elDate.options.length) initRatingDatePick();
   var d = (elDate && elDate.value) ? elDate.value : allDates[allDates.length - 1];
 
   var elMin = document.getElementById('ratingMinSample');
   var minN = elMin ? Math.max(1, parseInt(elMin.value, 10) || 1) : 1;
+  var siteFilter = rsel('ratingFilterSite');
 
-  var all = DATA.asins || [];
-  var dim = currentRatingDim || 'site';
+  var items = getRatingFilteredAsins();
+  var summaryEl = document.getElementById('ratingSummaryBar');
+  var noteEl = document.getElementById('ratingNote');
 
-  /* ---- 分组（行）---- */
-  var groups = [];
-  if (dim === 'site') {
-    groups.push({ label: '全部产品', items: all });
-  } else if (dim === 'bu') {
-    var buMap = {};
-    all.forEach(function(a) {
-      var k = a.BU || '(未分配BU)';
-      if (!buMap[k]) buMap[k] = [];
-      buMap[k].push(a);
-    });
-    Object.keys(buMap).forEach(function(k) { groups.push({ label: k, items: buMap[k] }); });
-  } else {
-    var catMap = {};
-    all.forEach(function(a) {
-      var k = a.category || '(无分类)';
-      if (!catMap[k]) catMap[k] = [];
-      catMap[k].push(a);
-    });
-    Object.keys(catMap).forEach(function(k) { groups.push({ label: k, items: catMap[k] }); });
-  }
-
-  /* ---- 计算 ---- */
-  var rows = groups.map(function(g) {
-    var mx = ratingStatBySite(g.items, 'MX', d);
-    var br = ratingStatBySite(g.items, 'BR', d);
-    return {
-      label: g.label, mx: mx, br: br,
-      mineTotal: mx.mine.n + br.mine.n,
-      maxMine: Math.max(mx.mine.n, br.mine.n),
-      maxComp: Math.max(mx.comp.n, br.comp.n)
-    };
-  });
-
-  if (dim !== 'site') {
-    rows = rows.filter(function(r) { return r.maxMine >= minN || r.maxComp >= minN; });
-    rows.sort(function(x, y) {
-      if (y.mineTotal !== x.mineTotal) return y.mineTotal - x.mineTotal;
-      return String(x.label).localeCompare(String(y.label), 'zh-Hans-CN');
-    });
-  }
-
-  /* ---- 顶部紧凑 KPI（全站口径）---- */
+  /* KPI */
   if (summaryEl) {
     var mineVals = [], compVals = [];
-    all.forEach(function(a) {
+    items.forEach(function(a) {
       var r = getRatingAt(a, d);
       if (r === null) return;
       if (isOwnBrandAsin(a)) mineVals.push(r); else compVals.push(r);
@@ -10148,6 +10294,7 @@ function renderRatingCompare() {
     var dlt = (mineAvg.avg !== null && compAvg.avg !== null) ? (mineAvg.avg - compAvg.avg) : null;
     summaryEl.innerHTML =
       '<div class="rating-kpi-inline">' +
+        '<span class="k"><i>筛选后 ASIN</i><b style="font-size:14px;">' + items.length + '</b></span>' +
         '<span class="k"><i>我方均分</i><b class="mine">' + fmtRating(mineAvg.avg) + '</b><em>' + mineAvg.n + ' 个</em></span>' +
         '<span class="k"><i>竞卖均分</i><b class="comp">' + fmtRating(compAvg.avg) + '</b><em>' + compAvg.n + ' 个</em></span>' +
         '<span class="k"><i>我方领先</i><b class="' + ratingDeltaClass(dlt) + '">' + fmtRatingDelta(dlt) + '</b></span>' +
@@ -10156,45 +10303,49 @@ function renderRatingCompare() {
       '</div>';
   }
 
-  /* ---- 表格 ---- */
-  if (!rows.length) {
-    body.innerHTML = '<div class="empty-state">当前维度/样本阈值下没有数据</div>';
-  } else {
-    var html = '<table class="rating-table rating-table-split"><thead>' +
-      '<tr>' +
-        '<th rowspan="2" style="width:20%;">维度</th>' +
-        '<th colspan="3" class="site-h mx">墨西哥 MX</th>' +
-        '<th colspan="3" class="site-h br">巴西 BR</th>' +
-      '</tr>' +
-      '<tr>' +
-        '<th>我方</th><th>竞卖</th><th>差值</th>' +
-        '<th>我方</th><th>竞卖</th><th>差值</th>' +
-      '</tr></thead><tbody>';
-
-    rows.forEach(function(r) {
-      var tag = '';
-      if (r.maxMine === 0 && r.maxComp > 0) tag = '<span class="rating-dim-sub">仅竞卖</span>';
-      html += '<tr>' +
-        '<td><span class="rating-dim">' + safeText(r.label) + '</span>' + tag + '</td>' +
-        ratingSplitCell(r.mx.mine, 'mine') + ratingSplitCell(r.mx.comp, 'comp') + ratingDeltaCell(r.mx.mine, r.mx.comp) +
-        ratingSplitCell(r.br.mine, 'mine') + ratingSplitCell(r.br.comp, 'comp') + ratingDeltaCell(r.br.mine, r.br.comp) +
-        '</tr>';
+  if (!items.length) {
+    ['ratingSiteBlock', 'ratingBUBlock', 'ratingCatBlock'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.innerHTML = '<div class="empty-state">当前筛选条件下没有 ASIN</div>';
     });
-    html += '</tbody></table>';
-    body.innerHTML = html;
+    if (noteEl) noteEl.innerHTML = '';
+    return;
   }
 
-  /* ---- 口径说明 ---- */
+  /* 站点维度 */
+  renderRatingSiteBlock(items, d, siteFilter);
+
+  /* BU 维度 */
+  var buMap = {}, buOrder = [];
+  items.forEach(function(a) {
+    var k = a.BU || '(未分配BU)';
+    if (!buMap[k]) { buMap[k] = []; buOrder.push(k); }
+    buMap[k].push(a);
+  });
+  renderRatingSplitBlock('ratingBUBlock', 'BU', buOrder.map(function(k) { return { label: k, items: buMap[k] }; }), d, minN, siteFilter, 0);
+
+  /* 三级分类维度 */
+  var catMap = {}, catOrder = [];
+  items.forEach(function(a) {
+    var k = a.category || '(无分类)';
+    if (!catMap[k]) { catMap[k] = []; catOrder.push(k); }
+    catMap[k].push(a);
+  });
+  renderRatingSplitBlock('ratingCatBlock', '三级分类', catOrder.map(function(k) { return { label: k, items: catMap[k] }; }), d, minN, siteFilter, 15);
+
+  /* 说明 */
   if (noteEl) {
-    var dimName = dim === 'site' ? '站点整体' : (dim === 'bu' ? 'BU 维度' : '三级分类维度');
-    var scopeNote = dim === 'site'
-      ? '站点整体只有一行（全部产品），MX / BR 分列对比'
-      : ('仅显示「某站我方或竞卖样本 ≥ ' + minN + '」的行，按我方样本合计降序');
+    var parts = [];
+    if (rsel('ratingFilterBU')) parts.push('BU=' + rsel('ratingFilterBU'));
+    if (rsel('ratingFilterCategory')) parts.push('分类=' + rsel('ratingFilterCategory'));
+    if (rsel('ratingFilterManager')) parts.push('负责人=' + rsel('ratingFilterManager'));
+    if (siteFilter) parts.push('站点=' + siteFilter);
+    var desc = parts.length ? parts.join('｜') : '全部数据';
     noteEl.innerHTML =
-      '<span style="margin-right:12px;">当前：<b>' + dimName + '</b>　' + scopeNote + '</span>' +
+      '<span style="margin-right:12px;">筛选：<b>' + safeText(desc) + '</b></span>' +
       '<span style="margin-right:12px;">均分 = 按 ASIN <b>简单平均</b>（非评论数加权）</span>' +
       '<span style="margin-right:12px;">竞卖 = 非本品牌</span>' +
-      '<span>仅统计当日有评分的 ASIN</span>';
+      '<span>仅统计当日有评分的 ASIN；BU/分类维度仅显示「某站我方或竞卖样本 ≥ ' + minN + '」的行</span>';
   }
 }
 

@@ -1089,7 +1089,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helv
           <span class="module-block-icon">⭐</span>
           <div>
             <div class="module-block-title">评分对比</div>
-            <div class="module-block-sub">我方 vs 竞卖 · 默认仅展示站点（MX / BR）维度；按 BU / 三级分类 / 负责人 筛选后再展开对应维度明细</div>
           </div>
         </div>
         <div class="module-block-ctrl">
@@ -1106,8 +1105,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helv
                   </select>
                   <select class="filter-select" id="ratingFilterBU" onchange="onRatingFilterChange('bu')"><option value="">全部BU</option></select>
                   <select class="filter-select" id="ratingFilterCategory" onchange="onRatingFilterChange('cat')"><option value="">全部三级分类</option></select>
-                  <select class="filter-select" id="ratingFilterManager" onchange="onRatingFilterChange('mgr')"><option value="">全部负责人</option></select>
-                  <select class="filter-select" id="ratingMinSample" onchange="renderRatingCompare()">
+                                    <select class="filter-select" id="ratingMinSample" onchange="renderRatingCompare()">
                     <option value="1">最小样本 ≥1</option>
                     <option value="3" selected>最小样本 ≥3</option>
                     <option value="5">最小样本 ≥5</option>
@@ -1116,11 +1114,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helv
                   <span class="rating-filter-reset" onclick="resetRatingFilters()">↺ 重置</span>
                 </div>
 
-                <div id="ratingSummaryBar" style="margin-top:10px;"></div>
-                <div id="ratingSiteBlock" style="margin-top:14px;"></div>
-                <div id="ratingBUBlock" style="margin-top:16px;"></div>
+                <div id="ratingSiteBlock" style="margin-top:2px;"></div>
                 <div id="ratingCatBlock" style="margin-top:16px;"></div>
-                <div id="ratingNote" style="margin-top:10px;"></div>
       </div>
     </div>
 
@@ -10056,12 +10051,10 @@ function getRatingFilteredAsins() {
   var all = DATA.asins || [];
   var bu = rsel('ratingFilterBU');
   var cat = rsel('ratingFilterCategory');
-  var mgr = rsel('ratingFilterManager');
   var site = rsel('ratingFilterSite');
   return all.filter(function(a) {
     if (bu && (a.BU || '(未分配BU)') !== bu) return false;
     if (cat && (a.category || '(无分类)') !== cat) return false;
-    if (mgr && (a.manager || '(未分配)') !== mgr) return false;
     if (site && a.country !== site) return false;
     return true;
   });
@@ -10071,22 +10064,16 @@ function buildRatingFilterOptions() {
   var all = DATA.asins || [];
   var elBU = document.getElementById('ratingFilterBU');
   var elCat = document.getElementById('ratingFilterCategory');
-  var elMgr = document.getElementById('ratingFilterManager');
-  if (!elBU || !elCat || !elMgr) return;
+  if (!elBU || !elCat) return;
 
-  var bus = [], mgrs = [], seenB = {}, seenM = {};
+  var bus = [], seenB = {};
   all.forEach(function(a) {
     var b = a.BU || '(未分配BU)';
-    var m = a.manager || '';
     if (!seenB[b]) { seenB[b] = 1; bus.push(b); }
-    if (m && !seenM[m]) { seenM[m] = 1; mgrs.push(m); }
   });
-  _ratingSortCn(bus); _ratingSortCn(mgrs);
+  _ratingSortCn(bus);
 
   elBU.innerHTML = '<option value="">全部BU</option>' + bus.map(function(v) {
-    return '<option value="' + safeText(v) + '">' + safeText(v) + '</option>';
-  }).join('');
-  elMgr.innerHTML = '<option value="">全部负责人</option>' + mgrs.map(function(v) {
     return '<option value="' + safeText(v) + '">' + safeText(v) + '</option>';
   }).join('');
   refreshRatingCategoryOptions('');
@@ -10117,7 +10104,7 @@ function onRatingFilterChange(which) {
 }
 
 function resetRatingFilters() {
-  ['ratingFilterBU', 'ratingFilterCategory', 'ratingFilterManager', 'ratingFilterSite'].forEach(function(id) {
+  ['ratingFilterBU', 'ratingFilterCategory', 'ratingFilterSite'].forEach(function(id) {
     var el = document.getElementById(id);
     if (el) el.value = '';
   });
@@ -10313,104 +10300,40 @@ function renderRatingCompare() {
   var siteFilter = rsel('ratingFilterSite');
 
   var items = getRatingFilteredAsins();
-  var summaryEl = document.getElementById('ratingSummaryBar');
-  var noteEl = document.getElementById('ratingNote');
-
-  /* KPI */
-  if (summaryEl) {
-    var mineVals = [], compVals = [];
-    items.forEach(function(a) {
-      var r = getRatingAt(a, d);
-      if (r === null) return;
-      if (isOwnBrandAsin(a)) mineVals.push(r); else compVals.push(r);
-    });
-    var mineAvg = summarizeRatings(mineVals);
-    var compAvg = summarizeRatings(compVals);
-    var dlt = (mineAvg.avg !== null && compAvg.avg !== null) ? (mineAvg.avg - compAvg.avg) : null;
-    summaryEl.innerHTML =
-      '<div class="rating-kpi-inline">' +
-        '<span class="k"><i>筛选后 ASIN</i><b style="font-size:14px;">' + items.length + '</b></span>' +
-        '<span class="k"><i>我方均分</i><b class="mine">' + fmtRating(mineAvg.avg) + '</b><em>' + mineAvg.n + ' 个</em></span>' +
-        '<span class="k"><i>竞卖均分</i><b class="comp">' + fmtRating(compAvg.avg) + '</b><em>' + compAvg.n + ' 个</em></span>' +
-        '<span class="k"><i>我方领先</i><b class="' + ratingDeltaClass(dlt) + '">' + fmtRatingDelta(dlt) + '</b></span>' +
-        '<span class="k"><i>≥4.5 占比</i><b>' + (mineAvg.hi === null ? '--' : mineAvg.hi.toFixed(1) + '%') + '</b><em>vs ' + (compAvg.hi === null ? '--' : compAvg.hi.toFixed(1) + '%') + '</em></span>' +
-        '<span class="k k-date"><i>截止</i><b style="font-size:13px;">' + d + '</b></span>' +
-      '</div>';
-  }
-
-  /* 是否做了维度筛选（BU / 三级分类 / 负责人）——只有筛选时才展开明细维度 */
-  var hasDimFilter = !!(rsel('ratingFilterBU') || rsel('ratingFilterCategory') || rsel('ratingFilterManager'));
-  var elBUBlock = document.getElementById('ratingBUBlock');
+  var elSiteBlock = document.getElementById('ratingSiteBlock');
   var elCatBlock = document.getElementById('ratingCatBlock');
 
+  /* 选了 BU 或三级分类 → 只出三级分类维度；否则只出站点维度 */
+  var hasDimFilter = !!(rsel('ratingFilterBU') || rsel('ratingFilterCategory'));
+
   if (!items.length) {
-    var elSiteEmpty = document.getElementById('ratingSiteBlock');
-    if (elSiteEmpty) elSiteEmpty.innerHTML = '<div class="empty-state">当前筛选条件下没有 ASIN</div>';
-    [elBUBlock, elCatBlock].forEach(function(el) {
-      if (!el) return;
-      if (hasDimFilter) { el.style.display = ''; el.innerHTML = '<div class="empty-state">当前筛选条件下没有 ASIN</div>'; }
-      else { el.innerHTML = ''; el.style.display = 'none'; }
-    });
-    if (noteEl) noteEl.innerHTML = '';
+    if (elSiteBlock) {
+      elSiteBlock.style.display = '';
+      elSiteBlock.innerHTML = '<div class="empty-state">当前筛选条件下没有 ASIN</div>';
+    }
+    if (elCatBlock) { elCatBlock.innerHTML = ''; elCatBlock.style.display = 'none'; }
     return;
   }
 
-  /* 站点（国家）维度——始终展示 */
-  renderRatingSiteBlock(items, d, siteFilter);
-
   if (!hasDimFilter) {
-    /* 未做任何筛选：只给站点总览，隐藏 BU / 三级分类明细 */
-    [elBUBlock, elCatBlock].forEach(function(el) {
-      if (el) { el.innerHTML = ''; el.style.display = 'none'; }
-    });
-  } else {
-    /* 已单独选定某个 BU 时，BU 维度只剩一行（与上方 KPI 重复），直接跳过 */
-    var showBUBlock = !rsel('ratingFilterBU');
-    if (elBUBlock) elBUBlock.style.display = showBUBlock ? '' : 'none';
-    if (elCatBlock) elCatBlock.style.display = '';
-
-    /* BU 维度 */
-    if (showBUBlock) {
-      var buMap = {}, buOrder = [];
-      items.forEach(function(a) {
-        var k = a.BU || '(未分配BU)';
-        if (!buMap[k]) { buMap[k] = []; buOrder.push(k); }
-        buMap[k].push(a);
-      });
-      renderRatingSplitBlock('ratingBUBlock', 'BU', buOrder.map(function(k) { return { label: k, items: buMap[k] }; }), d, minN, siteFilter, 0);
-    } else if (elBUBlock) {
-      elBUBlock.innerHTML = '';
-    }
-
-    /* 三级分类维度 */
-    var catMap = {}, catOrder = [];
-    items.forEach(function(a) {
-      var k = a.category || '(无分类)';
-      if (!catMap[k]) { catMap[k] = []; catOrder.push(k); }
-      catMap[k].push(a);
-    });
-    renderRatingSplitBlock('ratingCatBlock', '三级分类', catOrder.map(function(k) { return { label: k, items: catMap[k] }; }), d, minN, siteFilter, 15);
+    if (elSiteBlock) elSiteBlock.style.display = '';
+    renderRatingSiteBlock(items, d, siteFilter);
+    if (elCatBlock) { elCatBlock.innerHTML = ''; elCatBlock.style.display = 'none'; }
+    return;
   }
 
-  /* 说明 */
-  if (noteEl) {
-    var parts = [];
-    if (rsel('ratingFilterBU')) parts.push('BU=' + rsel('ratingFilterBU'));
-    if (rsel('ratingFilterCategory')) parts.push('分类=' + rsel('ratingFilterCategory'));
-    if (rsel('ratingFilterManager')) parts.push('负责人=' + rsel('ratingFilterManager'));
-    if (siteFilter) parts.push('站点=' + siteFilter);
-    var desc = parts.length ? parts.join('｜') : '全部数据';
-    noteEl.innerHTML =
-      '<span style="margin-right:12px;">筛选：<b>' + safeText(desc) + '</b></span>' +
-      '<span style="margin-right:12px;">均分 = 按 ASIN <b>简单平均</b>（非评论数加权）</span>' +
-      '<span style="margin-right:12px;">竞卖 = 非本品牌</span>' +
-      '<span>仅统计当日有评分的 ASIN' +
-      (hasDimFilter ? '；BU/分类维度仅显示「某站我方或竞卖样本 ≥ ' + minN + '」的行' : '；未筛选时仅展示站点维度，选择 BU / 分类 / 负责人 可展开明细') +
-      '</span>';
+  /* 有维度筛选：隐藏站点维度表，只给三级分类明细 */
+  if (elSiteBlock) { elSiteBlock.innerHTML = ''; elSiteBlock.style.display = 'none'; }
 
-  }
+  var catMap = {}, catOrder = [];
+  items.forEach(function(a) {
+    var k = a.category || '(无分类)';
+    if (!catMap[k]) { catMap[k] = []; catOrder.push(k); }
+    catMap[k].push(a);
+  });
+  if (elCatBlock) elCatBlock.style.display = '';
+  renderRatingSplitBlock('ratingCatBlock', '三级分类', catOrder.map(function(k) { return { label: k, items: catMap[k] }; }), d, minN, siteFilter, 15);
 }
-
 function renderAvgPrice() {
   const container = document.getElementById('avgPriceSection');
   if (!container) return;

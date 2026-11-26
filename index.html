@@ -174,19 +174,20 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helv
 .module-block-ctrl { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #64748b; white-space: nowrap; }
 .module-block-body { padding: 14px 18px 18px; }
 
-/* 模块一：评分对比 —— 靛蓝 */
-.module-block-rating { border-top: 3px solid #6366f1; }
-.module-block-rating .module-block-head { background: linear-gradient(90deg, #eef2ff 0%, #f5f3ff 55%, #ffffff 100%); border-bottom: 1px solid #e6e8ff; }
+/* 模块一：评分对比 —— 靛蓝（整块统一底色，头/身不再分层） */
+.module-block-rating { border-top: 3px solid #6366f1; background: #f8f8ff; }
+.module-block-rating .module-block-head { background: transparent; border-bottom: none; }
 .module-block-rating .module-block-icon { background: #e0e7ff; }
 .module-block-rating .module-block-title { color: #4338ca; }
 .module-block-rating .rating-filters { margin-top: 0; padding-top: 0; border-top: none; }
 
-/* 模块二：产品列表 —— 青绿 */
-.module-block-products { border-top: 3px solid #10b981; }
-.module-block-products .module-block-head { background: linear-gradient(90deg, #ecfdf5 0%, #f0fdfa 55%, #ffffff 100%); border-bottom: 1px solid #d6f5e9; }
+/* 模块二：产品列表 —— 青绿（整块统一底色，筛选区与卡片区连成一体） */
+.module-block-products { border-top: 3px solid #10b981; background: #f1faf6; }
+.module-block-products .module-block-head { background: transparent; border-bottom: none; }
 .module-block-products .module-block-icon { background: #d1fae5; }
 .module-block-products .module-block-title { color: #047857; }
-.module-block-products .module-block-body { background: #f7f9fb; }
+.module-block-products .module-block-body { background: transparent; }
+
 
 .rating-panel { margin-top: 14px; margin-bottom: 26px; padding: 14px 16px 12px; border: 1px solid #e0e7ff; border-radius: 12px; background: linear-gradient(135deg, #fafbff, #f6f4ff); }
 .rating-panel-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
@@ -1131,8 +1132,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helv
                 </select>
                 <input class="filter-input" id="filterSearch" placeholder="🔍 搜索 ASIN..." oninput="cascadingFilter()" data-page-node-id="Z4ERcJAyHYPD2NyF5CLIoA">
               </div>
-      </div>
-    </div>
 <div class="stats-bar" id="productStatsBar" data-page-node-id="kHaqhXC2DKHcF05FFOJEzF"><div class="stat-pill" data-page-node-id="x2NXxeDyNtwTm7kst22GxF">📦 共 <strong data-page-node-id="QiYMs6254HBSxn7H9UGBsH">1592</strong> 个 ASIN</div></div>
       <div class="product-grid" id="productGrid" data-page-node-id="WtlN6NHpw3FZ7on9oxd5ls"><div class="product-card" onclick="toggleProductCard('B0BTK7FYXL')" data-page-node-id="DAb45UihmjHWiZnGeCg1V4">
       <div class="card-img" data-page-node-id="eSwXSGyGQpmJYGSTMbmXu7">

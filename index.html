@@ -1098,11 +1098,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helv
       </div>
       <div class="module-block-body">
         <div class="rating-filters">
-                  <select class="filter-select" id="ratingFilterSite" onchange="renderRatingCompare()">
-                    <option value="">全部站点</option>
-                    <option value="MX">墨西哥 MX</option>
-                    <option value="BR">巴西 BR</option>
-                  </select>
                   <select class="filter-select" id="ratingFilterBU" onchange="onRatingFilterChange('bu')"><option value="">全部BU</option></select>
                   <select class="filter-select" id="ratingFilterCategory" onchange="onRatingFilterChange('cat')"><option value="">全部三级分类</option></select>
                   <span class="rating-filter-reset" onclick="resetRatingFilters()">↺ 重置</span>
@@ -3142,6 +3137,7 @@ function setCountry(country) {
   renderDiscountDistribution();
   initFilters();
   cascadingFilter();
+  renderRatingCompare();   /* 评分对比的站点口径跟随全局国家筛选 */
 }
 
 
@@ -10045,13 +10041,16 @@ function getRatingFilteredAsins() {
   var all = DATA.asins || [];
   var bu = rsel('ratingFilterBU');
   var cat = rsel('ratingFilterCategory');
-  var site = rsel('ratingFilterSite');
   return all.filter(function(a) {
     if (bu && (a.BU || '') !== bu) return false;
     if (cat && (a.category || '') !== cat) return false;
-    if (site && a.country !== site) return false;
     return true;
   });
+}
+
+/* 站点口径统一跟随顶部全局国家筛选（全部 / MX / BR） */
+function getRatingSiteFilter() {
+  return (typeof currentCountry !== 'undefined' && currentCountry && currentCountry !== 'all') ? currentCountry : '';
 }
 
 function buildRatingFilterOptions() {
@@ -10100,7 +10099,7 @@ function onRatingFilterChange(which) {
 }
 
 function resetRatingFilters() {
-  ['ratingFilterBU', 'ratingFilterCategory', 'ratingFilterSite'].forEach(function(id) {
+  ['ratingFilterBU', 'ratingFilterCategory'].forEach(function(id) {
     var el = document.getElementById(id);
     if (el) el.value = '';
   });
@@ -10198,8 +10197,11 @@ function renderRatingSiteBlock(items, d, siteFilter) {
     var st = ratingStatBySite(items, site, d);
     return { label: site === 'MX' ? '墨西哥 MX' : '巴西 BR', mine: st.mine, comp: st.comp, isTotal: false };
   });
-  var totalSt = ratingStatBySite(items, siteFilter || null, d);
-  rows.push({ label: siteFilter ? '合计' : '两站合计', mine: totalSt.mine, comp: totalSt.comp, isTotal: true });
+  /* 全部站点时才补一行两站合计；单站点时该行会与上面完全重复，直接省掉 */
+  if (!siteFilter) {
+    var totalSt = ratingStatBySite(items, null, d);
+    rows.push({ label: '两站合计', mine: totalSt.mine, comp: totalSt.comp, isTotal: true });
+  }
 
   var html = '<div class="rating-block-title">站点维度</div>' +
     '<table class="rating-table"><thead><tr>' +
@@ -10289,7 +10291,7 @@ function renderRatingCompare() {
   if (elDate && !elDate.options.length) initRatingDatePick();
   var d = (elDate && elDate.value) ? elDate.value : allDates[allDates.length - 1];
 
-  var siteFilter = rsel('ratingFilterSite');
+  var siteFilter = getRatingSiteFilter();
 
   var items = getRatingFilteredAsins();
   var elSiteBlock = document.getElementById('ratingSiteBlock');

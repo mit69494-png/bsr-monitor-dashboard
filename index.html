@@ -1105,12 +1105,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helv
                   </select>
                   <select class="filter-select" id="ratingFilterBU" onchange="onRatingFilterChange('bu')"><option value="">全部BU</option></select>
                   <select class="filter-select" id="ratingFilterCategory" onchange="onRatingFilterChange('cat')"><option value="">全部三级分类</option></select>
-                                    <select class="filter-select" id="ratingMinSample" onchange="renderRatingCompare()">
-                    <option value="1">最小样本 ≥1</option>
-                    <option value="3" selected>最小样本 ≥3</option>
-                    <option value="5">最小样本 ≥5</option>
-                    <option value="10">最小样本 ≥10</option>
-                  </select>
                   <span class="rating-filter-reset" onclick="resetRatingFilters()">↺ 重置</span>
                 </div>
 
@@ -10053,8 +10047,8 @@ function getRatingFilteredAsins() {
   var cat = rsel('ratingFilterCategory');
   var site = rsel('ratingFilterSite');
   return all.filter(function(a) {
-    if (bu && (a.BU || '(未分配BU)') !== bu) return false;
-    if (cat && (a.category || '(无分类)') !== cat) return false;
+    if (bu && (a.BU || '') !== bu) return false;
+    if (cat && (a.category || '') !== cat) return false;
     if (site && a.country !== site) return false;
     return true;
   });
@@ -10068,7 +10062,8 @@ function buildRatingFilterOptions() {
 
   var bus = [], seenB = {};
   all.forEach(function(a) {
-    var b = a.BU || '(未分配BU)';
+    var b = (a.BU || '').trim();
+    if (!b) return;                       /* 未分配 BU 不作为筛选项 */
     if (!seenB[b]) { seenB[b] = 1; bus.push(b); }
   });
   _ratingSortCn(bus);
@@ -10087,8 +10082,9 @@ function refreshRatingCategoryOptions(keep) {
   var bu = elBU ? elBU.value : '';
   var cats = [], seen = {};
   all.forEach(function(a) {
-    if (bu && (a.BU || '(未分配BU)') !== bu) return;
-    var c = a.category || '(无分类)';
+    if (bu && (a.BU || '') !== bu) return;
+    var c = (a.category || '').trim();
+    if (!c) return;                       /* 无三级分类不作为筛选项 */
     if (!seen[c]) { seen[c] = 1; cats.push(c); }
   });
   _ratingSortCn(cats);
@@ -10108,8 +10104,6 @@ function resetRatingFilters() {
     var el = document.getElementById(id);
     if (el) el.value = '';
   });
-  var elMin = document.getElementById('ratingMinSample');
-  if (elMin) elMin.value = '3';
   refreshRatingCategoryOptions('');
   _ratingCatExpanded = false;
   renderRatingCompare();
@@ -10295,8 +10289,6 @@ function renderRatingCompare() {
   if (elDate && !elDate.options.length) initRatingDatePick();
   var d = (elDate && elDate.value) ? elDate.value : allDates[allDates.length - 1];
 
-  var elMin = document.getElementById('ratingMinSample');
-  var minN = elMin ? Math.max(1, parseInt(elMin.value, 10) || 1) : 1;
   var siteFilter = rsel('ratingFilterSite');
 
   var items = getRatingFilteredAsins();
@@ -10332,7 +10324,8 @@ function renderRatingCompare() {
     catMap[k].push(a);
   });
   if (elCatBlock) elCatBlock.style.display = '';
-  renderRatingSplitBlock('ratingCatBlock', '三级分类', catOrder.map(function(k) { return { label: k, items: catMap[k] }; }), d, minN, siteFilter, 15);
+  /* 行过滤阈值固定为 1：只剔除「双方当日都无评分」的纯空行 */
+  renderRatingSplitBlock('ratingCatBlock', '三级分类', catOrder.map(function(k) { return { label: k, items: catMap[k] }; }), d, 1, siteFilter, 15);
 }
 function renderAvgPrice() {
   const container = document.getElementById('avgPriceSection');

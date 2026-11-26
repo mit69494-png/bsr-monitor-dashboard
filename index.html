@@ -164,6 +164,30 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helv
 .rating-hi .sep { color: #cbd5e1; margin: 0 4px; }
 
 /* 产品列表顶部的评分对比面板 */
+/* ===== 产品列表页：两大模块分块（评分对比 / 产品列表） ===== */
+.module-block { border-radius: 14px; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.06); margin-bottom: 22px; overflow: hidden; }
+.module-block-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 18px; flex-wrap: wrap; }
+.module-block-head-left { display: flex; align-items: center; gap: 11px; min-width: 0; }
+.module-block-icon { width: 36px; height: 36px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex: 0 0 auto; }
+.module-block-title { font-size: 16px; font-weight: 800; letter-spacing: 0.2px; }
+.module-block-sub { font-size: 12px; color: #94a3b8; margin-top: 3px; line-height: 1.5; }
+.module-block-ctrl { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #64748b; white-space: nowrap; }
+.module-block-body { padding: 14px 18px 18px; }
+
+/* 模块一：评分对比 —— 靛蓝 */
+.module-block-rating { border-top: 3px solid #6366f1; }
+.module-block-rating .module-block-head { background: linear-gradient(90deg, #eef2ff 0%, #f5f3ff 55%, #ffffff 100%); border-bottom: 1px solid #e6e8ff; }
+.module-block-rating .module-block-icon { background: #e0e7ff; }
+.module-block-rating .module-block-title { color: #4338ca; }
+.module-block-rating .rating-filters { margin-top: 0; padding-top: 0; border-top: none; }
+
+/* 模块二：产品列表 —— 青绿 */
+.module-block-products { border-top: 3px solid #10b981; }
+.module-block-products .module-block-head { background: linear-gradient(90deg, #ecfdf5 0%, #f0fdfa 55%, #ffffff 100%); border-bottom: 1px solid #d6f5e9; }
+.module-block-products .module-block-icon { background: #d1fae5; }
+.module-block-products .module-block-title { color: #047857; }
+.module-block-products .module-block-body { background: #f7f9fb; }
+
 .rating-panel { margin-top: 14px; margin-bottom: 26px; padding: 14px 16px 12px; border: 1px solid #e0e7ff; border-radius: 12px; background: linear-gradient(135deg, #fafbff, #f6f4ff); }
 .rating-panel-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
 .rating-panel-title { font-size: 15px; font-weight: 800; color: #1e293b; }
@@ -1057,65 +1081,75 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helv
 
   <!-- ========== MODULE 4: 产品列表 ========== -->
   <div id="module-products" class="module" data-page-node-id="KQmkhum0xgXMvw6bevMMYW">
-    <div class="card" data-page-node-id="Yct2dVEx0nLDEMMYkXqPRm">
-      <div class="card-header" data-page-node-id="w4uoOtPieHkPpWblx0Wmfo">
-        <div data-page-node-id="yeK4517ep4mCnjT4hTvZrm">
-          <div class="card-title" data-page-node-id="ksbYKktbgiCald6TwTFMMh">产品列表</div>
-          <div class="card-subtitle" data-page-node-id="9CJ6qUCu6SKuz0Qy33uHBL">所有ASIN综合信息</div>
-        </div>
-      </div>
 
-      <!-- ===== 评分对比（我方 vs 竞卖），置于产品列表顶部 ===== -->
-      <div class="rating-panel">
-        <div class="rating-panel-head">
+    <!-- ============ 模块一：评分对比 ============ -->
+    <div class="module-block module-block-rating">
+      <div class="module-block-head">
+        <div class="module-block-head-left">
+          <span class="module-block-icon">⭐</span>
           <div>
-            <div class="rating-panel-title">⭐ 评分对比（我方 vs 竞卖）</div>
-            <div class="rating-panel-sub">默认仅展示站点（MX / BR）维度；按 BU / 三级分类 / 负责人 筛选后再展开对应维度明细</div>
-          </div>
-          <div class="rating-panel-ctrl">
-            <span>截止日期</span>
-            <select class="filter-select" id="ratingDatePick" onchange="renderRatingCompare()" style="min-width:88px;"></select>
+            <div class="module-block-title">评分对比</div>
+            <div class="module-block-sub">我方 vs 竞卖 · 默认仅展示站点（MX / BR）维度；按 BU / 三级分类 / 负责人 筛选后再展开对应维度明细</div>
           </div>
         </div>
-
+        <div class="module-block-ctrl">
+          <span>截止日期</span>
+          <select class="filter-select" id="ratingDatePick" onchange="renderRatingCompare()" style="min-width:88px;"></select>
+        </div>
+      </div>
+      <div class="module-block-body">
         <div class="rating-filters">
-          <select class="filter-select" id="ratingFilterSite" onchange="renderRatingCompare()">
-            <option value="">全部站点</option>
-            <option value="MX">墨西哥 MX</option>
-            <option value="BR">巴西 BR</option>
-          </select>
-          <select class="filter-select" id="ratingFilterBU" onchange="onRatingFilterChange('bu')"><option value="">全部BU</option></select>
-          <select class="filter-select" id="ratingFilterCategory" onchange="onRatingFilterChange('cat')"><option value="">全部三级分类</option></select>
-          <select class="filter-select" id="ratingFilterManager" onchange="onRatingFilterChange('mgr')"><option value="">全部负责人</option></select>
-          <select class="filter-select" id="ratingMinSample" onchange="renderRatingCompare()">
-            <option value="1">最小样本 ≥1</option>
-            <option value="3" selected>最小样本 ≥3</option>
-            <option value="5">最小样本 ≥5</option>
-            <option value="10">最小样本 ≥10</option>
-          </select>
-          <span class="rating-filter-reset" onclick="resetRatingFilters()">↺ 重置</span>
+                  <select class="filter-select" id="ratingFilterSite" onchange="renderRatingCompare()">
+                    <option value="">全部站点</option>
+                    <option value="MX">墨西哥 MX</option>
+                    <option value="BR">巴西 BR</option>
+                  </select>
+                  <select class="filter-select" id="ratingFilterBU" onchange="onRatingFilterChange('bu')"><option value="">全部BU</option></select>
+                  <select class="filter-select" id="ratingFilterCategory" onchange="onRatingFilterChange('cat')"><option value="">全部三级分类</option></select>
+                  <select class="filter-select" id="ratingFilterManager" onchange="onRatingFilterChange('mgr')"><option value="">全部负责人</option></select>
+                  <select class="filter-select" id="ratingMinSample" onchange="renderRatingCompare()">
+                    <option value="1">最小样本 ≥1</option>
+                    <option value="3" selected>最小样本 ≥3</option>
+                    <option value="5">最小样本 ≥5</option>
+                    <option value="10">最小样本 ≥10</option>
+                  </select>
+                  <span class="rating-filter-reset" onclick="resetRatingFilters()">↺ 重置</span>
+                </div>
+
+                <div id="ratingSummaryBar" style="margin-top:10px;"></div>
+                <div id="ratingSiteBlock" style="margin-top:14px;"></div>
+                <div id="ratingBUBlock" style="margin-top:16px;"></div>
+                <div id="ratingCatBlock" style="margin-top:16px;"></div>
+                <div id="ratingNote" style="margin-top:10px;"></div>
+      </div>
+    </div>
+
+    <!-- ============ 模块二：产品列表 ============ -->
+    <div class="module-block module-block-products">
+      <div class="module-block-head">
+        <div class="module-block-head-left">
+          <span class="module-block-icon">📋</span>
+          <div>
+            <div class="module-block-title">产品列表</div>
+            <div class="module-block-sub">所有ASIN综合信息 · 点击卡片可展开大类 / 小类排名、价格、评分趋势</div>
+          </div>
         </div>
-
-        <div id="ratingSummaryBar" style="margin-top:10px;"></div>
-        <div id="ratingSiteBlock" style="margin-top:14px;"></div>
-        <div id="ratingBUBlock" style="margin-top:16px;"></div>
-        <div id="ratingCatBlock" style="margin-top:16px;"></div>
-        <div id="ratingNote" style="margin-top:10px;"></div>
       </div>
-
-      <div class="filters" data-page-node-id="Wf6cULCgGDKYyuRxNg4rHp">
-        <select class="filter-select" id="filterBU" onchange="cascadingFilter()" data-page-node-id="1OHhEUmZWV7Y2BzJSHrOih"><option value="" data-page-node-id="EOdMvpDlCGnfjdNG89t8fO">全部BU</option><option value="厨卫&amp;寝具BU" data-page-node-id="Fbw15c7fozeykkfrBIcVzG">厨卫&amp;寝具BU</option><option value="宠物用品BU" data-page-node-id="dzuRiXNipBc0zunwavd210">宠物用品BU</option><option value="家具BU" data-page-node-id="OjPMCVwx1hc1vjUqqZtjXE">家具BU</option><option value="户外休闲BU" data-page-node-id="DzHNDBvggWcVuqr4rvekSh">户外休闲BU</option><option value="衣物收纳BU" data-page-node-id="u6eBOP7965j2J8OgXHCANW">衣物收纳BU</option><option value="装饰&amp;桌椅BU" data-page-node-id="0dz7LPVbt6AuZzZL6vYOju">装饰&amp;桌椅BU</option></select>
-        <select class="filter-select" id="filterManager" onchange="cascadingFilter()" data-page-node-id="rXanVnXJWwglnXBrYaw7vV"><option value="" data-page-node-id="6EAKOUcO56ANB7ATInahob">全部负责人</option><option value="刘昕苑" data-page-node-id="GOm1F0FhT6slTGwfNKECQK">刘昕苑</option><option value="刘爽" data-page-node-id="hA0EG2JVQYr9FAfGe7qFh8">刘爽</option><option value="唐米" data-page-node-id="SFFBsWSvW3ERGDkVGX96nb">唐米</option><option value="李灌蒿" data-page-node-id="LBePadYYimUSrjc01gODKm">李灌蒿</option><option value="王德帝" data-page-node-id="hDsDl9e4euM88jYuuCTxng">王德帝</option><option value="王雅馨" data-page-node-id="NHeCa7nVXDDzoxb9il7yHu">王雅馨</option><option value="程晓丽" data-page-node-id="XQIrFqutawrOBg8LtYI3hX">程晓丽</option><option value="蓝晓琳" data-page-node-id="Gw1q7xU4b5UbfCrAzZ4rAa">蓝晓琳</option><option value="赵敏" data-page-node-id="hGmDPUVcscEolH8NHY0Q9E">赵敏</option><option value="陈晓龙" data-page-node-id="rXaHDfnrXosuOcumuSL9LN">陈晓龙</option></select>
-        <select class="filter-select" id="filterCategory" onchange="cascadingFilter()" data-page-node-id="B1NtM1RpQbyHWkZEgqRoqC"><option value="" data-page-node-id="D5X26zLxFfrdxfi0789A71">全部三级分类</option><option value="中岛台" data-page-node-id="nDCQWpfGlCQrKNITQhCAMi">中岛台</option><option value="储物推车" data-page-node-id="Fvp288TkvfovXKvqcAmPk7">储物推车</option><option value="储物柜" data-page-node-id="T4SJwr4NTYyMF12Oe7PA93">储物柜</option><option value="儿童收纳架" data-page-node-id="2sqoCs5ZM88Nm1zmVbp3uE">儿童收纳架</option><option value="化妆品收纳箱包" data-page-node-id="NED9ToH87QTx2LZCKtecsi">化妆品收纳箱包</option><option value="升降桌" data-page-node-id="mvZzHwiwJCtHkCQcI5tehL">升降桌</option><option value="吧桌" data-page-node-id="hGTwN3lMde3XUA59SZxw77">吧桌</option><option value="吧椅" data-page-node-id="tTKUqHExWeYNelRoCAjUGv">吧椅</option><option value="咖啡桌" data-page-node-id="wbnQepc5l1YBkEXcRH4BOF">咖啡桌</option><option value="哑铃" data-page-node-id="uY0SvG65YmmsHHusBXiEvU">哑铃</option><option value="垃圾桶" data-page-node-id="kpItVCE96Jkh8Ifaci9Hiq">垃圾桶</option><option value="墙镜" data-page-node-id="grVW36yjFgIsRDy8u9AAuP">墙镜</option><option value="多场景置物架" data-page-node-id="gxtUt9uFHosFtkampoVEkT">多场景置物架</option><option value="太阳伞" data-page-node-id="KEVpd0gaaX6NcGVKI57DVT">太阳伞</option><option value="宠物围栏" data-page-node-id="BhGa0GFcq31KquUltnsUbE">宠物围栏</option><option value="宠物垃圾袋" data-page-node-id="ryZGf4UzfgIWom7YYs7yzo">宠物垃圾袋</option><option value="宠物毯" data-page-node-id="GQEEjkvHMC9kopjmsTyZuL">宠物毯</option><option value="家居置物架" data-page-node-id="mocSETEwCTFEnM9nkgpfKL">家居置物架</option><option value="工作凳" data-page-node-id="u8E8ratkS1ZctoxCG1KZOL">工作凳</option><option value="床" data-page-node-id="gvwVuwuqpJNhTE0ZEagKNp">床</option><option value="床头柜" data-page-node-id="Tl5FZnxVJiGI0mSac1AxYV">床头柜</option><option value="手表盒" data-page-node-id="HKR238xEtDBsEAMIDwpoDj">手表盒</option><option value="抽屉内收纳格" data-page-node-id="doPfecayJLRwDY4tKjh3xc">抽屉内收纳格</option><option value="换鞋凳" data-page-node-id="6J5wDB2hwwM6s9RhArgzzv">换鞋凳</option><option value="收纳凳" data-page-node-id="4XeJrGh7pC6RTvFL2ACFCj">收纳凳</option><option value="收纳箱" data-page-node-id="o3Bt5m9IcZidQKs3iMOsyS">收纳箱</option><option value="文件柜" data-page-node-id="ORjhVGpzFQI6zKEVE3SSb1">文件柜</option><option value="斗柜" data-page-node-id="eJv4I8Qt0mYSd9bHf4XvHJ">斗柜</option><option value="晾晒架" data-page-node-id="tFSqS0O3L1mPUoxxEYv4hJ">晾晒架</option><option value="晾衣架" data-page-node-id="oyVGejQOoDU4bLzVaLlEHx">晾衣架</option><option value="梳妆台" data-page-node-id="2SaXhMEAgGJiWZcxZ08UTS">梳妆台</option><option value="浴室地柜" data-page-node-id="5w15FBny7mmoHK1wYVMcID">浴室地柜</option><option value="浴室挂柜" data-page-node-id="uYrxz6J5jroghUG2DpNhtI">浴室挂柜</option><option value="烘焙架" data-page-node-id="HK6fr78e9efntsJeEp4Fcq">烘焙架</option><option value="熨衣板" data-page-node-id="hs8FHEEmcEGY7e1RZFMbmZ">熨衣板</option><option value="狗包" data-page-node-id="OWg1ZhYkJfAnCOk5dX9WRb">狗包</option><option value="狗窝" data-page-node-id="lsV0NpiqCTAqrDApUW8XCL">狗窝</option><option value="猫爬架" data-page-node-id="Ll7QORYJJGCiFd5mQYdrbf">猫爬架</option><option value="玄关桌" data-page-node-id="832bFLTIAEdisR5hhhHTQg">玄关桌</option><option value="电脑桌" data-page-node-id="Ns6ER4VFNIyoqmKk2UdGec">电脑桌</option><option value="电视柜" data-page-node-id="ayy5XGJujtJ4U4ssooCCcy">电视柜</option><option value="相框" data-page-node-id="J8WqperbMlCKoxSENavC5o">相框</option><option value="碗碟架" data-page-node-id="otpCA89C2qruBc4ZPb8meX">碗碟架</option><option value="立地镜" data-page-node-id="ke2rueZ0xHDb2RNLQiVq0P">立地镜</option><option value="简易衣柜" data-page-node-id="GeiQJpLu0h7SHzqURy4Sq2">简易衣柜</option><option value="网椅" data-page-node-id="fpRbrQhwOO6H883iBrEk8T">网椅</option><option value="脏衣篮" data-page-node-id="UbheYVDZcfQGBjmu8tNseD">脏衣篮</option><option value="行李架" data-page-node-id="tErct5o5bKALGtbWOnD2M2">行李架</option><option value="衣帽架" data-page-node-id="WdMDmh2rmCodFf0GUl4E90">衣帽架</option><option value="衣撑" data-page-node-id="ZwJtTsv2IV24s8GsztzMQx">衣撑</option><option value="角架" data-page-node-id="3YHPixEaCx5vZKIjIoeZMo">角架</option><option value="调料架" data-page-node-id="CDESY30WnKKnh7iRUlVZeR">调料架</option><option value="货架" data-page-node-id="fmUaRg2DyuoFGuGTCLiH7e">货架</option><option value="边桌" data-page-node-id="gLgr7DQ8rzMu7mBljvwGGN">边桌</option><option value="野营椅" data-page-node-id="yiWr66XQwMrpLh1Xy1sUJg">野营椅</option><option value="野营车" data-page-node-id="oJIMT13ZBCMlCRAHdO5UhY">野营车</option><option value="镜子" data-page-node-id="COOCwEuCdMhReunFgJzJF1">镜子</option><option value="鞋架" data-page-node-id="sF90ZQreCaZ5ZPxH5yWT1I">鞋架</option><option value="鞋柜" data-page-node-id="E1yCUtvLnoXdeFx7FUQx3w">鞋柜</option><option value="鞋盒" data-page-node-id="WqdVxl8BrkfjK3rP91j5md">鞋盒</option><option value="餐桌" data-page-node-id="1qDd5sLuDgTtgZnyu8Io4k">餐桌</option><option value="餐椅" data-page-node-id="vEd4hdcx4cWzpbyGvER9Jz">餐椅</option><option value="首饰盒" data-page-node-id="VYHVJH28m8s4mCdJHVyutt">首饰盒</option><option value="马桶架" data-page-node-id="pyiNBFgQT7wzFRdVcOQcUy">马桶架</option></select>
-        <select class="filter-select" id="filterBrandType" onchange="cascadingFilter()" data-page-node-id="1HH2pSHtFQSdkm09DjIC7p">
-          <option value="" data-page-node-id="fYUhBfD4jtSutIgT0LdFQo">全部品牌类型</option>
-          <option value="own" data-page-node-id="bUAeNfrhCyjTJfE0zgxHk8">本品牌</option>
-          <option value="comp" data-page-node-id="uvhtAzKfMJhvvjfjdpCI4x">非本品牌</option>
-        </select>
-        <input class="filter-input" id="filterSearch" placeholder="🔍 搜索 ASIN..." oninput="cascadingFilter()" data-page-node-id="Z4ERcJAyHYPD2NyF5CLIoA">
+      <div class="module-block-body">
+        <div class="filters" data-page-node-id="Wf6cULCgGDKYyuRxNg4rHp">
+                <select class="filter-select" id="filterBU" onchange="cascadingFilter()" data-page-node-id="1OHhEUmZWV7Y2BzJSHrOih"><option value="" data-page-node-id="EOdMvpDlCGnfjdNG89t8fO">全部BU</option><option value="厨卫&amp;寝具BU" data-page-node-id="Fbw15c7fozeykkfrBIcVzG">厨卫&amp;寝具BU</option><option value="宠物用品BU" data-page-node-id="dzuRiXNipBc0zunwavd210">宠物用品BU</option><option value="家具BU" data-page-node-id="OjPMCVwx1hc1vjUqqZtjXE">家具BU</option><option value="户外休闲BU" data-page-node-id="DzHNDBvggWcVuqr4rvekSh">户外休闲BU</option><option value="衣物收纳BU" data-page-node-id="u6eBOP7965j2J8OgXHCANW">衣物收纳BU</option><option value="装饰&amp;桌椅BU" data-page-node-id="0dz7LPVbt6AuZzZL6vYOju">装饰&amp;桌椅BU</option></select>
+                <select class="filter-select" id="filterManager" onchange="cascadingFilter()" data-page-node-id="rXanVnXJWwglnXBrYaw7vV"><option value="" data-page-node-id="6EAKOUcO56ANB7ATInahob">全部负责人</option><option value="刘昕苑" data-page-node-id="GOm1F0FhT6slTGwfNKECQK">刘昕苑</option><option value="刘爽" data-page-node-id="hA0EG2JVQYr9FAfGe7qFh8">刘爽</option><option value="唐米" data-page-node-id="SFFBsWSvW3ERGDkVGX96nb">唐米</option><option value="李灌蒿" data-page-node-id="LBePadYYimUSrjc01gODKm">李灌蒿</option><option value="王德帝" data-page-node-id="hDsDl9e4euM88jYuuCTxng">王德帝</option><option value="王雅馨" data-page-node-id="NHeCa7nVXDDzoxb9il7yHu">王雅馨</option><option value="程晓丽" data-page-node-id="XQIrFqutawrOBg8LtYI3hX">程晓丽</option><option value="蓝晓琳" data-page-node-id="Gw1q7xU4b5UbfCrAzZ4rAa">蓝晓琳</option><option value="赵敏" data-page-node-id="hGmDPUVcscEolH8NHY0Q9E">赵敏</option><option value="陈晓龙" data-page-node-id="rXaHDfnrXosuOcumuSL9LN">陈晓龙</option></select>
+                <select class="filter-select" id="filterCategory" onchange="cascadingFilter()" data-page-node-id="B1NtM1RpQbyHWkZEgqRoqC"><option value="" data-page-node-id="D5X26zLxFfrdxfi0789A71">全部三级分类</option><option value="中岛台" data-page-node-id="nDCQWpfGlCQrKNITQhCAMi">中岛台</option><option value="储物推车" data-page-node-id="Fvp288TkvfovXKvqcAmPk7">储物推车</option><option value="储物柜" data-page-node-id="T4SJwr4NTYyMF12Oe7PA93">储物柜</option><option value="儿童收纳架" data-page-node-id="2sqoCs5ZM88Nm1zmVbp3uE">儿童收纳架</option><option value="化妆品收纳箱包" data-page-node-id="NED9ToH87QTx2LZCKtecsi">化妆品收纳箱包</option><option value="升降桌" data-page-node-id="mvZzHwiwJCtHkCQcI5tehL">升降桌</option><option value="吧桌" data-page-node-id="hGTwN3lMde3XUA59SZxw77">吧桌</option><option value="吧椅" data-page-node-id="tTKUqHExWeYNelRoCAjUGv">吧椅</option><option value="咖啡桌" data-page-node-id="wbnQepc5l1YBkEXcRH4BOF">咖啡桌</option><option value="哑铃" data-page-node-id="uY0SvG65YmmsHHusBXiEvU">哑铃</option><option value="垃圾桶" data-page-node-id="kpItVCE96Jkh8Ifaci9Hiq">垃圾桶</option><option value="墙镜" data-page-node-id="grVW36yjFgIsRDy8u9AAuP">墙镜</option><option value="多场景置物架" data-page-node-id="gxtUt9uFHosFtkampoVEkT">多场景置物架</option><option value="太阳伞" data-page-node-id="KEVpd0gaaX6NcGVKI57DVT">太阳伞</option><option value="宠物围栏" data-page-node-id="BhGa0GFcq31KquUltnsUbE">宠物围栏</option><option value="宠物垃圾袋" data-page-node-id="ryZGf4UzfgIWom7YYs7yzo">宠物垃圾袋</option><option value="宠物毯" data-page-node-id="GQEEjkvHMC9kopjmsTyZuL">宠物毯</option><option value="家居置物架" data-page-node-id="mocSETEwCTFEnM9nkgpfKL">家居置物架</option><option value="工作凳" data-page-node-id="u8E8ratkS1ZctoxCG1KZOL">工作凳</option><option value="床" data-page-node-id="gvwVuwuqpJNhTE0ZEagKNp">床</option><option value="床头柜" data-page-node-id="Tl5FZnxVJiGI0mSac1AxYV">床头柜</option><option value="手表盒" data-page-node-id="HKR238xEtDBsEAMIDwpoDj">手表盒</option><option value="抽屉内收纳格" data-page-node-id="doPfecayJLRwDY4tKjh3xc">抽屉内收纳格</option><option value="换鞋凳" data-page-node-id="6J5wDB2hwwM6s9RhArgzzv">换鞋凳</option><option value="收纳凳" data-page-node-id="4XeJrGh7pC6RTvFL2ACFCj">收纳凳</option><option value="收纳箱" data-page-node-id="o3Bt5m9IcZidQKs3iMOsyS">收纳箱</option><option value="文件柜" data-page-node-id="ORjhVGpzFQI6zKEVE3SSb1">文件柜</option><option value="斗柜" data-page-node-id="eJv4I8Qt0mYSd9bHf4XvHJ">斗柜</option><option value="晾晒架" data-page-node-id="tFSqS0O3L1mPUoxxEYv4hJ">晾晒架</option><option value="晾衣架" data-page-node-id="oyVGejQOoDU4bLzVaLlEHx">晾衣架</option><option value="梳妆台" data-page-node-id="2SaXhMEAgGJiWZcxZ08UTS">梳妆台</option><option value="浴室地柜" data-page-node-id="5w15FBny7mmoHK1wYVMcID">浴室地柜</option><option value="浴室挂柜" data-page-node-id="uYrxz6J5jroghUG2DpNhtI">浴室挂柜</option><option value="烘焙架" data-page-node-id="HK6fr78e9efntsJeEp4Fcq">烘焙架</option><option value="熨衣板" data-page-node-id="hs8FHEEmcEGY7e1RZFMbmZ">熨衣板</option><option value="狗包" data-page-node-id="OWg1ZhYkJfAnCOk5dX9WRb">狗包</option><option value="狗窝" data-page-node-id="lsV0NpiqCTAqrDApUW8XCL">狗窝</option><option value="猫爬架" data-page-node-id="Ll7QORYJJGCiFd5mQYdrbf">猫爬架</option><option value="玄关桌" data-page-node-id="832bFLTIAEdisR5hhhHTQg">玄关桌</option><option value="电脑桌" data-page-node-id="Ns6ER4VFNIyoqmKk2UdGec">电脑桌</option><option value="电视柜" data-page-node-id="ayy5XGJujtJ4U4ssooCCcy">电视柜</option><option value="相框" data-page-node-id="J8WqperbMlCKoxSENavC5o">相框</option><option value="碗碟架" data-page-node-id="otpCA89C2qruBc4ZPb8meX">碗碟架</option><option value="立地镜" data-page-node-id="ke2rueZ0xHDb2RNLQiVq0P">立地镜</option><option value="简易衣柜" data-page-node-id="GeiQJpLu0h7SHzqURy4Sq2">简易衣柜</option><option value="网椅" data-page-node-id="fpRbrQhwOO6H883iBrEk8T">网椅</option><option value="脏衣篮" data-page-node-id="UbheYVDZcfQGBjmu8tNseD">脏衣篮</option><option value="行李架" data-page-node-id="tErct5o5bKALGtbWOnD2M2">行李架</option><option value="衣帽架" data-page-node-id="WdMDmh2rmCodFf0GUl4E90">衣帽架</option><option value="衣撑" data-page-node-id="ZwJtTsv2IV24s8GsztzMQx">衣撑</option><option value="角架" data-page-node-id="3YHPixEaCx5vZKIjIoeZMo">角架</option><option value="调料架" data-page-node-id="CDESY30WnKKnh7iRUlVZeR">调料架</option><option value="货架" data-page-node-id="fmUaRg2DyuoFGuGTCLiH7e">货架</option><option value="边桌" data-page-node-id="gLgr7DQ8rzMu7mBljvwGGN">边桌</option><option value="野营椅" data-page-node-id="yiWr66XQwMrpLh1Xy1sUJg">野营椅</option><option value="野营车" data-page-node-id="oJIMT13ZBCMlCRAHdO5UhY">野营车</option><option value="镜子" data-page-node-id="COOCwEuCdMhReunFgJzJF1">镜子</option><option value="鞋架" data-page-node-id="sF90ZQreCaZ5ZPxH5yWT1I">鞋架</option><option value="鞋柜" data-page-node-id="E1yCUtvLnoXdeFx7FUQx3w">鞋柜</option><option value="鞋盒" data-page-node-id="WqdVxl8BrkfjK3rP91j5md">鞋盒</option><option value="餐桌" data-page-node-id="1qDd5sLuDgTtgZnyu8Io4k">餐桌</option><option value="餐椅" data-page-node-id="vEd4hdcx4cWzpbyGvER9Jz">餐椅</option><option value="首饰盒" data-page-node-id="VYHVJH28m8s4mCdJHVyutt">首饰盒</option><option value="马桶架" data-page-node-id="pyiNBFgQT7wzFRdVcOQcUy">马桶架</option></select>
+                <select class="filter-select" id="filterBrandType" onchange="cascadingFilter()" data-page-node-id="1HH2pSHtFQSdkm09DjIC7p">
+                  <option value="" data-page-node-id="fYUhBfD4jtSutIgT0LdFQo">全部品牌类型</option>
+                  <option value="own" data-page-node-id="bUAeNfrhCyjTJfE0zgxHk8">本品牌</option>
+                  <option value="comp" data-page-node-id="uvhtAzKfMJhvvjfjdpCI4x">非本品牌</option>
+                </select>
+                <input class="filter-input" id="filterSearch" placeholder="🔍 搜索 ASIN..." oninput="cascadingFilter()" data-page-node-id="Z4ERcJAyHYPD2NyF5CLIoA">
+              </div>
       </div>
-
-      <div class="stats-bar" id="productStatsBar" data-page-node-id="kHaqhXC2DKHcF05FFOJEzF"><div class="stat-pill" data-page-node-id="x2NXxeDyNtwTm7kst22GxF">📦 共 <strong data-page-node-id="QiYMs6254HBSxn7H9UGBsH">1592</strong> 个 ASIN</div></div>
+    </div>
+<div class="stats-bar" id="productStatsBar" data-page-node-id="kHaqhXC2DKHcF05FFOJEzF"><div class="stat-pill" data-page-node-id="x2NXxeDyNtwTm7kst22GxF">📦 共 <strong data-page-node-id="QiYMs6254HBSxn7H9UGBsH">1592</strong> 个 ASIN</div></div>
       <div class="product-grid" id="productGrid" data-page-node-id="WtlN6NHpw3FZ7on9oxd5ls"><div class="product-card" onclick="toggleProductCard('B0BTK7FYXL')" data-page-node-id="DAb45UihmjHWiZnGeCg1V4">
       <div class="card-img" data-page-node-id="eSwXSGyGQpmJYGSTMbmXu7">
         <img src="https://m.media-amazon.com/images/I/61sdiatqRJL._AC_SY300_SX300_QL70_ML2_.jpg" alt="B0BTK7FYXL" onerror="this.parentElement.innerHTML='<span style=color:#ccc;font-size:20px;>📷</span>'" data-page-node-id="snaqcxKfmnOWwUURuAKWny">
@@ -3021,6 +3055,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helv
         加载更多（已展示 50 / 1592）
       </button>
     </div></div>
+      </div>
     </div>
   </div>
 </div>
